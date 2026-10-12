@@ -1,0 +1,5 @@
+# TEST BUILD: blocks all crawlers so the review copy is never indexed.
+# At launch replace with the policy in the SEO and AI Search Strategy, Part four:
+#   allow search and answer crawlers, decide on training crawlers, add the sitemap.
+User-agent: *
+Disallow: /

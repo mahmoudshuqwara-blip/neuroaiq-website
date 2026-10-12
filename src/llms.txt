@@ -1,0 +1,15 @@
+# NeuroAIQ
+
+> NeuroAIQ helps organisations get greater value from their AI investments. It measures the organisational and workforce conditions that decide whether AI is actually adopted, and gives leaders evidence on what to prioritise. Based in Melbourne, Australia. Founded by Dr Mahtab Ameri.
+
+NeuroAIQ is a solution provider, not a change-management firm.
+
+## Solutions
+- [DRIVE™ Adaptability Diagnostic](https://neuroaiq.com.au/solutions.html#sol-drive): the entry point. An evidence-based roadmap; DRIVE Discovery takes three weeks, the Full Diagnostic twelve.
+- [Advisory](https://neuroaiq.com.au/solutions.html#sol-advisory): turning the evidence into leadership decisions.
+- [Workforce Readiness](https://neuroaiq.com.au/solutions.html#sol-workforce): building AI capability around real work.
+
+## More
+- [Case study](https://neuroaiq.com.au/case-studies.html)
+- [Executive Insights](https://neuroaiq.com.au/insights.html)
+- [Contact](https://neuroaiq.com.au/contact.html)
