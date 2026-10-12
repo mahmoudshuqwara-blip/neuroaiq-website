@@ -1,0 +1,16 @@
+{
+  "name": "neuroaiq-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NeuroAIQ website rebuild: static site, CSE3CAP Team B58 handover build",
+  "scripts": {
+    "start": "node tests/serve.js",
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.56.0"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,11 @@
+Copyright (c) 2026 NeuroAIQ Pty Ltd. All rights reserved.
+
+This website and its source code were produced for NeuroAIQ Pty Ltd by Team B58
+(CSE3CAP Capstone, La Trobe University) under the NeuroAIQ Confidentiality and
+Intellectual Property Deed. No licence is granted to anyone else to use, copy,
+modify or distribute it without NeuroAIQ's written permission.
+
+Third-party components keep their own licences:
+  - Plus Jakarta Sans: SIL Open Font License 1.1 (src/assets/fonts/OFL.txt)
+  - Stock photography: Unsplash License, Pixabay Content License
+  - Development tools (not shipped): Playwright (Apache-2.0), axe-core (MPL-2.0)

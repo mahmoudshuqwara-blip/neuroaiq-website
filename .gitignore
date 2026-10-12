@@ -1,0 +1,8 @@
+node_modules/
+test-results/
+playwright-report/
+.DS_Store
+# Prototype export used once by tools/convert.py: holds the full confidential prototype
+tools/extract.json
+tools/raw-assets/
+__pycache__/
