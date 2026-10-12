@@ -1,0 +1,4 @@
+# For tools/convert.py and tools/extract.py only. The website itself has no dependencies.
+beautifulsoup4>=4.12
+Pillow>=10
+playwright>=1.56
