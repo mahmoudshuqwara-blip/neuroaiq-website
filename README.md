@@ -8,7 +8,8 @@ The rebuilt marketing website for **NeuroAIQ Pty Ltd** (neuroaiq.com.au), a Melb
 |---|---|
 | **What it is** | A static, multi-page, responsive website: nine pages plus privacy and 404 |
 | **Stack** | Plain HTML, CSS and JavaScript. No framework, no build step, no runtime dependencies |
-| **Status** | Review build. Not live. Search engines are blocked (`noindex` and `robots.txt`) |
+| **Status** | Review build at <https://grand-dodol-927468.netlify.app>. Not live. Search engines are blocked (`noindex` and `robots.txt`) |
+| **Design source** | Prototype V3, the latest version on 13 October 2026. A further iteration is in progress; see *Porting a newer prototype* |
 | **Tests** | 32 Playwright tests × 2 devices (desktop, phone), including axe accessibility checks |
 | **Docs** | System Maintenance Document and User Documentation in [`docs/`](docs/) |
 
@@ -90,7 +91,21 @@ Prototype V3 was a single HTML design canvas: nine fixed 1240px frames side by s
 4. **Applied the copy fixes** flagged in the handover. Every change is listed in `CHANGELOG.md` for client approval.
 5. **Wired up the interactive parts** (`tools/wire.py`). Drawn drop-downs became real `<select>`s, filter chips and tabs became buttons with ARIA state, and the static calendar became a working booking widget.
 
-The converter needs the prototype export (`tools/extract.json` and `tools/raw-assets/`, both git-ignored because they hold the full confidential prototype). After the first conversion the pages are maintained by hand. **Don't re-run the converter over hand edits.**
+The converter needs the prototype export (`tools/extract.json` and `tools/raw-assets/`, both git-ignored because they hold the full confidential prototype).
+
+### Porting a newer prototype
+
+No page has been edited by hand since conversion: every fix lives in `tools/wire.py`, `partials/`, `src/css/site.css` and `src/js/main.js`. A newer prototype from the same design tool can be ported by re-running the pipeline:
+
+```bash
+pip install -r tools/requirements.txt
+python tools/extract.py "NeuroAIQ Prototype V4 (standalone).html"
+python tools/convert.py
+npm test
+git diff --stat
+```
+
+The wiring finds elements by their visible text. If a heading is reworded, update `wire.py`, and a failing test will tell you where. **Once anyone edits a page in `src/` by hand, stop using the converter** and port changes manually.
 
 > **Known trade-off:** `pages.css` uses generated class names (`.s1` to `.s454`). They are faithful to the approved design but not semantic. Refactoring them into named components is the first item under Future work.
 
