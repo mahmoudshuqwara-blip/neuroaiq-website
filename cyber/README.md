@@ -33,7 +33,7 @@ The purpose is defensive: show that the team can recognise the signals a real at
 - MySQL rejected logins (error 1045) on local 3307
 - Telnet login prompt and event sequence on local 2323
 
-The video is kept as a separate media file, not committed into the documentation repository, to keep that repository small and text-first. The screenshots in the gallery are the primary stills; the video is the moving-picture version of the same events.
+The file included here is a compressed copy (about 6 MB, 1080p at 30fps) so it travels with the repository. The original full-quality recording is roughly 78 MB and is kept outside the repository. The screenshots in the gallery are the primary stills; the video is the moving-picture version of the same events.
 
 ## How to read the evidence
 
