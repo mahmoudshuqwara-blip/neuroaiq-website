@@ -1,0 +1,19 @@
+# Local credentials and raw exports
+.env
+.env.*
+*.pem
+*.key
+*.log
+raw-evidence/
+# Test payloads and disk images
+*.zip
+*.7z
+*.rar
+*.iso
+*.img
+*.qcow2
+*.vmdk
+*.vdi
+# Operating system files
+.DS_Store
+Thumbs.db
