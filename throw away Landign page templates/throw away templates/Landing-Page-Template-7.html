@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NeuroAIQ — The Neuroscience of AI Adoption</title>
+<meta name="description" content="NeuroAIQ helps enterprise teams close the gap between AI capability and human readiness — measured, structured and board-ready." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #F5F4F0;
+  --paper-dim: #EBE9E3;
+  --ink: #12141C;
+  --ink-soft: #545B6E;
+  --navy-deep: #0B1120;
+  --navy-mid: #0C356F;
+  --signal: #42C8FF;
+  --mist: #AAB3C5;
+  --border-light: rgba(18,20,28,0.14);
+  --border-light-soft: rgba(18,20,28,0.08);
+  --border-dark: rgba(245,244,240,0.14);
+  --border-dark-soft: rgba(245,244,240,0.08);
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--navy-deep); color: var(--mist); font-family: var(--sans); font-size: 16px; font-weight: 400; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; background: none; border: none; cursor: pointer; color: inherit; }
+ul { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--signal); outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed; top: -100%; left: 1rem; z-index: 10000;
+  background: var(--signal); color: var(--navy-deep);
+  font-size: .8rem; font-weight: 600; letter-spacing: .04em;
+  padding: .8rem 1.25rem; transition: top .2s ease;
+}
+.skip-link:focus { top: 1rem; outline: 2px solid var(--paper); outline-offset: 2px; }
+
+/* ── CURSOR ── */
+.cursor { width: 8px; height: 8px; background: var(--signal); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s, border-color .2s, background .2s; }
+.cursor.expanded { width: 34px; height: 34px; background: transparent; border: 1.5px solid var(--paper); }
+@media (hover: none), (pointer: coarse) { .cursor, .scroll-line { display: none; } }
+
+/* ── NOISE ── */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: .5;
+}
+
+/* ── SCROLL PROGRESS ── */
+.scroll-line { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--navy-mid), var(--signal)); width: 0%; z-index: 9998; transition: width .05s linear; }
+
+/* ── NAV ── */
+.site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4rem; background: rgba(11,17,32,.88); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border-dark); }
+.nav-logo { display: flex; align-items: center; gap: .75rem; }
+.nav-logo svg { width: 40px; height: 40px; flex-shrink: 0; }
+.nav-wordmark { font-family: var(--sans); font-weight: 600; font-size: .82rem; letter-spacing: .16em; color: var(--paper); text-transform: uppercase; }
+.nav-wordmark span { display: block; font-weight: 400; font-size: .62rem; letter-spacing: .2em; color: var(--mist); margin-top: 1px; }
+.nav-right { display: none; align-items: center; gap: 2.25rem; }
+@media (min-width: 1024px) { .nav-right { display: flex; } }
+.nav-link { font-size: .74rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--paper); position: relative; padding-bottom: 3px; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1.5px; background: var(--signal); transition: width .3s ease; }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+.nav-item { position: relative; }
+.nav-trigger { display: inline-flex; align-items: center; gap: .35rem; font-size: .74rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--paper); position: relative; padding-bottom: 3px; }
+.nav-trigger::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1.5px; background: var(--signal); transition: width .3s ease; }
+.nav-item.is-open .nav-trigger::after { width: 100%; }
+.nav-trigger svg { width: .7rem; height: .7rem; transition: transform .2s ease; }
+.nav-item.is-open .nav-trigger svg { transform: rotate(180deg); }
+.nav-dropdown { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); padding-top: .85rem; width: 21rem; display: none; }
+.nav-item.is-open .nav-dropdown, .nav-item:hover .nav-dropdown { display: block; }
+.nav-dropdown-inner { border: 1px solid var(--border-dark); background: var(--navy-deep); box-shadow: 0 24px 48px -12px rgba(0,0,0,.55); }
+.nav-dropdown-inner a { display: block; padding: .9rem 1.1rem; border-bottom: 1px solid var(--border-dark-soft); transition: background .2s ease, padding-left .2s ease; }
+.nav-dropdown-inner a:last-child { border-bottom: none; }
+.nav-dropdown-inner a:hover { background: rgba(245,244,240,0.05); padding-left: 1.4rem; }
+.dropdown-title { display: block; font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--paper); }
+.dropdown-desc { display: block; font-size: .72rem; color: var(--mist); margin-top: .2rem; }
+
+.nav-cta { position: relative; display: none; align-items: center; gap: .5rem; font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--paper); border: 1px solid var(--paper); padding: .7rem 1.3rem; overflow: hidden; }
+@media (min-width: 1024px) { .nav-cta { display: inline-flex; } }
+.nav-cta::before { content: ''; position: absolute; inset: 0; background: var(--signal); transform: translateX(-101%); transition: transform .4s ease; z-index: 0; }
+.nav-cta:hover::before { transform: translateX(0); }
+.nav-cta:hover { color: var(--navy-deep); border-color: transparent; }
+.nav-cta span, .nav-cta svg { position: relative; z-index: 1; }
+.nav-cta svg { width: .85rem; height: .85rem; transition: transform .3s ease; }
+.nav-cta:hover svg { transform: translateX(3px); }
+
+.hamburger { display: flex; padding: .4rem; color: var(--paper); }
+@media (min-width: 1024px) { .hamburger { display: none; } }
+.hamburger svg { width: 1.4rem; height: 1.4rem; }
+#icon-close { display: none; }
+
+.mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 499; background: var(--navy-deep); display: none; flex-direction: column; padding: 6rem 2rem 2rem; overflow-y: auto; }
+.mobile-menu.is-open { display: flex; }
+.mobile-link { padding: 1.1rem 0; font-size: 1rem; font-weight: 400; letter-spacing: .04em; color: var(--paper); border-bottom: 1px solid var(--border-dark); }
+.mobile-solutions-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 0; font-size: 1rem; color: var(--paper); border-bottom: 1px solid var(--border-dark); }
+.mobile-solutions-trigger svg { width: 1rem; height: 1rem; transition: transform .2s ease; }
+#mobile-solutions.is-open .mobile-solutions-trigger svg { transform: rotate(180deg); }
+.mobile-solutions-list { display: none; flex-direction: column; padding: .25rem 0 .5rem 1rem; }
+#mobile-solutions.is-open .mobile-solutions-list { display: flex; }
+.mobile-solutions-list a { padding: .75rem 0; font-size: .85rem; color: var(--mist); }
+.mobile-menu-cta { margin-top: 2rem; }
+
+/* ── HERO ── */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 10rem 4rem 6rem; position: relative; overflow: hidden; }
+.hero-geo { position: absolute; top: 0; right: 0; width: 42vw; height: 100%; pointer-events: none; overflow: hidden; }
+.hero-logo-wrap { position: absolute; top: 46%; right: -4%; transform: translateY(-50%); width: 30vw; min-width: 260px; max-width: 460px; z-index: 1; cursor: pointer; }
+.hero-logo-wrap:hover { transform: translateY(-50%) scale(1.02); }
+@media (max-width: 1024px) {
+  .hero-logo-wrap { position: static; transform: none; width: 150px; margin: 0 auto 2rem; }
+  .hero-logo-wrap:hover { transform: scale(1.02); }
+}
+.hero-eyebrow { font-size: .72rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--signal); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; position: relative; z-index: 2; }
+.hero-eyebrow::before { content: ''; display: block; width: 2.5rem; height: 1px; background: var(--signal); }
+.hero-headline { position: relative; z-index: 2; font-family: var(--serif); font-style: italic; font-size: clamp(2.6rem, 6.6vw, 6.4rem); line-height: 1.04; letter-spacing: -.02em; color: var(--paper); max-width: min(16ch, 62vw); }
+.hero-headline .accent { font-style: normal; color: var(--signal); }
+.hero-headline sup { font-size: .4em; font-style: normal; vertical-align: super; color: var(--mist); }
+.hero-bottom { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; margin-top: 3rem; gap: 2rem; flex-wrap: wrap; }
+.hero-sub { font-size: clamp(.92rem, 1.1vw, 1.05rem); font-weight: 400; color: var(--mist); line-height: 1.75; max-width: 36ch; }
+.text-link { display: inline-block; font-size: .8rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--paper); position: relative; padding-bottom: 3px; }
+.text-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1.5px; background: var(--signal); transform-origin: left; transition: transform .4s ease; }
+.text-link:hover::after { transform: scaleX(1.06); }
+
+/* ── TICKER ── */
+.ticker { background: var(--navy-deep); overflow: hidden; padding: .85rem 0; border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); }
+.ticker-track { display: flex; animation: tickerMove 30s linear infinite; white-space: nowrap; width: max-content; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker-item { display: inline-flex; align-items: center; gap: 1rem; padding: 0 2.5rem; font-size: .68rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--mist); }
+.ticker-item .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--signal); flex-shrink: 0; }
+@keyframes tickerMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── METRICS ── */
+.metrics { padding: 5rem 4rem; display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border-dark); }
+.metric-item { padding: 2rem 2.25rem; border-left: 1px solid var(--border-dark); }
+.metric-item:last-child { border-right: 1px solid var(--border-dark); }
+.metric-value { font-family: var(--serif); font-style: italic; font-size: clamp(2.1rem, 3.2vw, 3.3rem); color: var(--paper); line-height: 1; margin-bottom: .5rem; }
+.metric-value span { color: var(--signal); }
+.metric-label { font-size: .68rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
+
+/* ── SECTION SHARED ── */
+.section-label { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--signal); display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; }
+.section-label::before { content: ''; display: block; width: 1.5rem; height: 1px; background: var(--signal); }
+.section-label.on-dark { color: var(--signal); }
+.section-label.on-dark::before { background: var(--signal); }
+
+/* ── SOLUTIONS (LEDGER) ── */
+.solutions { padding: 7rem 4rem; }
+.ledger-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; margin-bottom: 4rem; }
+.ledger-title { font-family: var(--serif); font-style: italic; font-size: clamp(1.9rem, 2.8vw, 3rem); color: var(--paper); max-width: 24ch; line-height: 1.15; }
+.ledger-sub { font-size: .9rem; color: var(--mist); max-width: 30ch; line-height: 1.7; }
+.bento-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--signal); border-left: 1px solid var(--border-dark); }
+.bento-card { padding: 3rem 2.5rem; border-right: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); position: relative; overflow: hidden; transition: background .3s ease; scroll-margin-top: 6rem; }
+.bento-card::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--navy-mid), var(--signal)); transition: width .5s ease; }
+.bento-card:hover::before { width: 100%; }
+.bento-card:hover { background: rgba(66,200,255,0.045); }
+.bento-num { font-size: .65rem; font-weight: 600; letter-spacing: .16em; color: var(--signal); margin-bottom: 1.75rem; }
+.bento-icon { margin-bottom: 1.5rem; color: var(--signal); }
+.bento-icon svg { width: 30px; height: 30px; }
+.bento-card-title { font-family: var(--serif); font-style: italic; font-size: 1.55rem; line-height: 1.15; color: var(--paper); margin-bottom: .85rem; }
+.bento-card-body { font-size: .87rem; font-weight: 400; line-height: 1.75; color: var(--mist); margin-bottom: 1.75rem; }
+.bento-tag { display: inline-block; font-size: .64rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border-dark); padding: .3rem .7rem; margin-right: .4rem; margin-bottom: .4rem; }
+
+/* ── THESIS ── */
+.thesis { background: var(--navy-deep); padding: 8rem 4rem; position: relative; overflow: hidden; border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); }
+.thesis-geo { position: absolute; right: -6%; top: 50%; transform: translateY(-50%); width: 42vw; opacity: .05; pointer-events: none; }
+.thesis-inner { position: relative; z-index: 2; max-width: 1100px; }
+.thesis-headline { font-family: var(--serif); font-style: italic; font-size: clamp(2rem, 4.2vw, 4.4rem); line-height: 1.12; letter-spacing: -.015em; color: var(--paper); max-width: 22ch; margin-bottom: 3.5rem; }
+.thesis-headline .accent { font-style: normal; color: var(--signal); }
+.thesis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; border-top: 1px solid var(--border-dark); padding-top: 3.5rem; }
+.thesis-col-label { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--mist); margin-bottom: 1rem; }
+.thesis-col-text { font-size: .92rem; font-weight: 400; line-height: 1.85; color: #9aa3b8; }
+
+/* ── FRAMEWORK (APPROACH ROWS) ── */
+.framework { padding: 8rem 4rem; border-bottom: 1px solid var(--border-dark); }
+.framework-header { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; margin-bottom: 4.5rem; }
+.framework-title { font-family: var(--serif); font-style: italic; font-size: clamp(1.9rem, 2.8vw, 3rem); line-height: 1.12; color: var(--paper); }
+.framework-desc { font-size: .92rem; font-weight: 400; line-height: 1.8; color: var(--mist); align-self: flex-end; }
+.approach-row { display: grid; grid-template-columns: 3.5rem 1fr 1.4fr auto; align-items: start; gap: 2rem; padding: 2.25rem 0; border-bottom: 1px solid var(--border-dark); transition: background .3s ease; }
+.approach-row:hover { background: rgba(245,244,240,.03); }
+.approach-row-num { font-size: .65rem; font-weight: 600; letter-spacing: .16em; color: var(--signal); padding-top: .3rem; font-family: var(--mono); }
+.approach-row-title { font-family: var(--serif); font-style: italic; font-size: 1.4rem; color: var(--paper); }
+.approach-row-desc { font-size: .85rem; font-weight: 400; line-height: 1.75; color: var(--mist); }
+.approach-row-arrow { color: var(--border-dark); font-size: 1.2rem; transition: color .3s, transform .3s; padding-top: .2rem; }
+.approach-row:hover .approach-row-arrow { color: var(--signal); transform: translateX(4px); }
+
+/* ── DIAGNOSTIC ── */
+.diagnostic { background: var(--navy-deep); padding: 8rem 4rem; border-bottom: 1px solid var(--border-dark); }
+.diagnostic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+.diagnostic-title { font-family: var(--serif); font-style: italic; font-size: clamp(1.9rem, 2.8vw, 3rem); color: var(--paper); line-height: 1.12; margin-bottom: 1.25rem; }
+.diagnostic-desc { font-size: .9rem; font-weight: 400; line-height: 1.8; color: var(--mist); margin-bottom: 2.5rem; max-width: 34ch; }
+.readout-card { border: 1px solid var(--border-dark); padding: 2rem; margin-bottom: 2.5rem; }
+.readout-inner { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.gauge-wrap { position: relative; flex-shrink: 0; }
+.gauge-progress { transition: stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1); }
+.gauge-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.gauge-score { font-family: var(--mono); font-size: 1.8rem; font-weight: 600; color: var(--paper); }
+.gauge-label { font-family: var(--mono); font-size: .66rem; color: var(--mist); letter-spacing: .08em; }
+.metrics-mini { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 1rem; }
+.metric-mini-labels { font-family: var(--mono); display: flex; justify-content: space-between; font-size: .68rem; color: var(--mist); margin-bottom: .3rem; letter-spacing: .04em; }
+.metric-mini-track { height: 3px; background: var(--border-dark); overflow: hidden; }
+.metric-mini-fill { height: 100%; background: var(--signal); width: 0%; transition: width 1.2s cubic-bezier(.16,1,.3,1); }
+.diagnostic-list { display: flex; flex-direction: column; gap: .85rem; }
+.diagnostic-list li { display: flex; align-items: flex-start; gap: .75rem; font-size: .85rem; color: var(--mist); }
+.diagnostic-list svg { flex-shrink: 0; margin-top: .15rem; width: 1.1rem; height: 1.1rem; color: var(--signal); }
+
+/* FORM */
+.diagnostic-form-wrap { border: 1px solid var(--border-dark); padding: 2.5rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+@media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.25rem; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: .66rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mist); }
+.req { color: var(--signal); }
+input, select, textarea { font-family: var(--sans); font-size: .88rem; font-weight: 400; color: var(--paper); background: transparent; border: none; border-bottom: 1px solid var(--border-dark); padding: .7rem 0; width: 100%; outline: none; transition: border-color .3s; appearance: none; }
+input::placeholder, textarea::placeholder { color: #4c5568; }
+input:focus, select:focus, textarea:focus { border-color: var(--signal); }
+textarea { resize: none; height: 84px; }
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23AAB3C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 14px;
+  padding-right: 1.5rem;
+}
+select option { background: var(--navy-deep); color: var(--paper); }
+.form-submit { display: inline-flex; align-items: center; gap: .75rem; background: var(--signal); color: var(--navy-deep); font-size: .74rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; padding: 1rem 1.75rem; border: none; cursor: pointer; position: relative; overflow: hidden; margin-top: .5rem; transition: opacity .2s ease; }
+.form-submit:hover { opacity: .9; }
+.form-submit svg { width: .9rem; height: .9rem; transition: transform .3s; }
+.form-submit:hover svg { transform: translateX(3px); }
+.form-note { margin-top: 1rem; font-size: .74rem; color: var(--mist); min-height: 1em; }
+
+/* ── INSIGHTS ── */
+.insights { padding: 7rem 4rem; }
+.insights-header { margin-bottom: 3.5rem; max-width: 40ch; }
+.insights-title { font-family: var(--serif); font-style: italic; font-size: clamp(1.9rem, 2.8vw, 3rem); color: var(--paper); line-height: 1.15; }
+.insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border-dark); }
+.insight-card { padding: 2.25rem 2rem 2.25rem 0; border-right: 1px solid var(--border-dark); }
+.insight-card:first-child { padding-left: 0; }
+.insight-card:last-child { border-right: none; }
+.insight-meta { font-family: var(--mono); display: flex; align-items: center; justify-content: space-between; font-size: .68rem; color: var(--signal); margin-bottom: 1.25rem; letter-spacing: .04em; }
+.insight-card-title { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--paper); line-height: 1.25; margin-bottom: .75rem; }
+.insight-excerpt { font-size: .85rem; font-weight: 400; line-height: 1.75; color: var(--mist); margin-bottom: 1.5rem; }
+.insight-more { display: inline-flex; align-items: center; gap: .4rem; font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--paper); position: relative; padding-bottom: 3px; }
+.insight-more::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1.5px; background: var(--signal); transition: width .3s ease; }
+.insight-card:hover .insight-more::after { width: 100%; }
+
+/* ── FOOTER ── */
+footer { background: var(--navy-deep); position: relative; overflow: hidden; }
+.footer-accent-line { height: 2px; background: linear-gradient(90deg, var(--signal) 0%, var(--navy-mid) 45%, transparent 100%); }
+.footer-main { position: relative; z-index: 1; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 4.5rem 4rem 4rem; border-bottom: 1px solid var(--border-dark); }
+.footer-brand { padding-right: 3.5rem; border-right: 1px solid var(--border-dark); }
+.footer-logo-link { display: inline-flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; transition: opacity .3s; }
+.footer-logo-link:hover { opacity: .75; }
+.footer-logo-link svg { width: 34px; height: 34px; }
+.footer-wordmark { font-weight: 600; font-size: .9rem; letter-spacing: .16em; text-transform: uppercase; color: var(--paper); }
+.footer-tagline { font-family: var(--serif); font-style: italic; font-size: 1rem; color: #9aa3b8; line-height: 1.6; max-width: 26ch; }
+.footer-col { padding: 0 2.25rem; border-right: 1px solid var(--border-dark); }
+.footer-col:last-child { border-right: none; padding-right: 0; }
+.footer-col-label { font-size: .62rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--signal); margin-bottom: 1.5rem; display: flex; align-items: center; gap: .5rem; }
+.footer-col-label::before { content: ''; display: block; width: 1rem; height: 1px; background: var(--signal); flex-shrink: 0; }
+.footer-nav-list a { display: block; font-size: .78rem; font-weight: 400; letter-spacing: .04em; color: var(--mist); padding: .5rem 0; position: relative; transition: color .25s; }
+.footer-nav-list a:hover { color: var(--paper); }
+.footer-bottom { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; padding: 1.75rem 4rem; }
+.footer-legal { font-size: .7rem; font-weight: 400; color: #9aa3b8; line-height: 1.6; max-width: 58ch; }
+.footer-bottom-right { display: flex; align-items: center; gap: 1.75rem; flex-shrink: 0; }
+.footer-copy { font-size: .68rem; color: #9aa3b8; white-space: nowrap; }
+.back-to-top { display: inline-flex; align-items: center; gap: .5rem; font-size: .64rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #9aa3b8; border: 1px solid var(--border-dark); padding: .5rem .9rem; transition: border-color .3s, color .3s; white-space: nowrap; }
+.back-to-top svg { width: 11px; height: 11px; transition: transform .3s ease; }
+.back-to-top:hover { border-color: var(--signal); color: var(--signal); }
+.back-to-top:hover svg { transform: translateY(-3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none !important; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .site-nav { padding: 1.1rem 1.5rem; }
+  .hero { padding: 7rem 1.5rem 4rem; }
+  .hero-geo { display: none; }
+  .metrics { padding: 3.5rem 1.5rem; grid-template-columns: repeat(2, 1fr); }
+  .metric-item:nth-child(2n) { border-right: 1px solid var(--border-dark); }
+  .solutions { padding: 5rem 1.5rem; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .thesis { padding: 5rem 1.5rem; }
+  .thesis-geo { display: none; }
+  .thesis-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .framework { padding: 5rem 1.5rem; }
+  .framework-header { grid-template-columns: 1fr; gap: 1.5rem; }
+  .approach-row { grid-template-columns: 3.5rem 1fr; row-gap: .6rem; }
+  .approach-row-desc { grid-column: 1 / -1; display: block; }
+  .approach-row-arrow { display: none; }
+  .diagnostic { padding: 5rem 1.5rem; }
+  .diagnostic-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .insights { padding: 5rem 1.5rem; }
+  .insights-grid { grid-template-columns: 1fr; }
+  .insight-card { border-right: none; border-bottom: 1px solid var(--border-dark); padding: 2rem 0; }
+  .insight-card:first-child { padding-top: 0; }
+  .insight-card:last-child { border-bottom: none; }
+  .footer-main { grid-template-columns: 1fr; padding: 3rem 1.5rem 2.5rem; }
+  .footer-brand { padding-right: 0; border-right: none; border-bottom: 1px solid var(--border-dark); padding-bottom: 2rem; margin-bottom: 2rem; }
+  .footer-col { padding: 0; border-right: none; border-bottom: 1px solid var(--border-dark); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+  .footer-col:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .footer-bottom { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+  .footer-bottom-right { width: 100%; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+
+<a href="#home" class="skip-link">Skip to main content</a>
+<div class="scroll-line" id="scrollLine"></div>
+<div class="cursor" id="cursor"></div>
+
+<nav class="site-nav" id="siteNav">
+  <a href="#home" class="nav-logo" id="navLogoLink">
+<img src="logo.svg" alt="NeuroAIQ logo" style="width:40px;height:40px;flex-shrink:0;" loading="lazy" decoding="async">
+    <div class="nav-wordmark">NeuroAIQ<span>Adoption Intelligence</span></div>
+  </a>
+
+  <div class="nav-right">
+    <a href="#home" class="nav-link active">Home</a>
+    <a href="#about" class="nav-link">About</a>
+    <div class="nav-item" id="navSolutionsItem">
+      <button type="button" class="nav-trigger" id="navSolutionsTrigger">
+        Solutions
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-inner">
+          <a href="#drive-diagnostic"><span class="dropdown-title">DRIVE&trade; Diagnostic</span><span class="dropdown-desc">Benchmark your AI Adoption Quotient</span></a>
+          <a href="#adaptability-accelerator"><span class="dropdown-title">Adaptability Accelerator&trade;</span><span class="dropdown-desc">A structured AI-fluency capability sprint</span></a>
+          <a href="#workforce-readiness"><span class="dropdown-title">Workforce Readiness</span><span class="dropdown-desc">Role-level readiness mapping</span></a>
+          <a href="#advisory"><span class="dropdown-title">Advisory</span><span class="dropdown-desc">Strategic counsel for boards and execs</span></a>
+        </div>
+      </div>
+    </div>
+    <a href="#insights" class="nav-link">Insights</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
+
+  <a href="#contact" class="nav-cta">
+    <span>Book a Diagnostic</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+
+  <button type="button" class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+    <svg id="iconMenu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+    <svg id="iconClose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" class="mobile-link">Home</a>
+  <a href="#about" class="mobile-link">About</a>
+  <div id="mobile-solutions">
+    <button type="button" class="mobile-solutions-trigger" id="mobileSolutionsTrigger">
+      Solutions
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="mobile-solutions-list">
+      <a href="#drive-diagnostic">DRIVE&trade; Diagnostic</a>
+      <a href="#adaptability-accelerator">Adaptability Accelerator&trade;</a>
+      <a href="#workforce-readiness">Workforce Readiness</a>
+      <a href="#advisory">Advisory</a>
+    </div>
+  </div>
+  <a href="#insights" class="mobile-link">Insights</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+  <a href="#contact" class="nav-cta mobile-menu-cta">
+    <span>Book a Diagnostic</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+<section class="hero" id="home">
+  <div class="hero-geo" id="heroGeo">
+    <svg viewBox="0 0 600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="180" x2="600" y2="0" stroke="#42C8FF" stroke-width="0.5" opacity="0.28"/>
+      <line x1="0" y1="340" x2="600" y2="160" stroke="#42C8FF" stroke-width="0.5" opacity="0.22"/>
+      <line x1="0" y1="500" x2="600" y2="320" stroke="#42C8FF" stroke-width="0.5" opacity="0.16"/>
+      <line x1="0" y1="660" x2="600" y2="480" stroke="#42C8FF" stroke-width="0.5" opacity="0.1"/>
+      <line x1="180" y1="900" x2="600" y2="600" stroke="#42C8FF" stroke-width="0.4" opacity="0.1"/>
+      <circle cx="520" cy="160" r="4" fill="#42C8FF" opacity="0.35"/>
+      <circle cx="560" cy="340" r="4" fill="#42C8FF" opacity="0.25"/>
+      <circle cx="500" cy="520" r="4" fill="#42C8FF" opacity="0.22"/>
+    </svg>
+  </div>
+
+  <div class="hero-logo-wrap" id="heroLogoWrap" title="Click to replay the animation" role="button" tabindex="0" aria-label="Replay logo animation">
+    <div id="heroLogoInner">
+<img src="logo.svg" alt="NeuroAIQ brain logo" class="h-auto w-full" loading="eager" decoding="async">
+    </div>
+  </div>
+
+  <div class="hero-eyebrow" id="heroEyebrow">AI Adoption Intelligence — Melbourne</div>
+
+  <h1 class="hero-headline" id="heroHeadline">The Neuroscience<br/>of AI Adoption<sup>&reg;</sup>.<br/><span class="accent">Measured</span>, not assumed.</h1>
+
+  <div class="hero-bottom">
+    <p class="hero-sub" id="heroSub">NeuroAIQ helps enterprise teams close the gap between AI capability and human readiness — measured, structured and board-ready.</p>
+    <div class="hero-cta" id="heroCta">
+      <a href="#drive-diagnostic" class="text-link">Book a DRIVE&trade; Diagnostic &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="dot"></span>Northfield Group</span>
+    <span class="ticker-item"><span class="dot"></span>Apex Partners</span>
+    <span class="ticker-item"><span class="dot"></span>Velocity Co.</span>
+    <span class="ticker-item"><span class="dot"></span>Orion Tech</span>
+    <span class="ticker-item"><span class="dot"></span>Lumen Capital</span>
+    <span class="ticker-item"><span class="dot"></span>Meridian Holdings</span>
+    <span class="ticker-item"><span class="dot"></span>Northfield Group</span>
+    <span class="ticker-item"><span class="dot"></span>Apex Partners</span>
+    <span class="ticker-item"><span class="dot"></span>Velocity Co.</span>
+    <span class="ticker-item"><span class="dot"></span>Orion Tech</span>
+    <span class="ticker-item"><span class="dot"></span>Lumen Capital</span>
+    <span class="ticker-item"><span class="dot"></span>Meridian Holdings</span>
+  </div>
+</div>
+
+<section class="metrics" id="metrics">
+  <div class="metric-item"><div class="metric-value"><span id="c1">0</span><span>+</span></div><div class="metric-label">Leaders Assessed</div></div>
+  <div class="metric-item"><div class="metric-value"><span id="c2">0</span><span>+</span></div><div class="metric-label">Enterprise Engagements</div></div>
+  <div class="metric-item"><div class="metric-value"><span id="c3">0</span></div><div class="metric-label">Readiness Dimensions</div></div>
+  <div class="metric-item"><div class="metric-value"><span id="c4">0</span></div><div class="metric-label">Days to First Result</div></div>
+</section>
+
+<section class="solutions" id="solutions">
+  <div class="ledger-header" id="ledgerHeader">
+    <div>
+      <div class="section-label">Our Solutions</div>
+      <h2 class="ledger-title">Four ways we build AI-ready organisations.</h2>
+    </div>
+    <p class="ledger-sub">Each solution is built on the same evidence base — your organisation's actual adoption signals.</p>
+  </div>
+
+  <div class="bento-grid">
+    <div class="bento-card" id="drive-diagnostic">
+      <div class="bento-num">01 — DIAGNOSTIC</div>
+      <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15 15 9"/><circle cx="12" cy="15" r="1"/><path d="M4.5 15a7.5 7.5 0 1 1 15 0"/></svg></div>
+      <h3 class="bento-card-title">DRIVE&trade; Diagnostic</h3>
+      <p class="bento-card-body">Benchmark your organisation's AI Adoption Quotient across five readiness dimensions.</p>
+      <div><span class="bento-tag">AQ Scoring</span><span class="bento-tag">Peer Benchmarking</span><span class="bento-tag">Board Reporting</span></div>
+    </div>
+    <div class="bento-card" id="adaptability-accelerator">
+      <div class="bento-num">02 — CAPABILITY</div>
+      <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+      <h3 class="bento-card-title">Adaptability Accelerator&trade;</h3>
+      <p class="bento-card-body">A structured capability sprint that builds adaptive AI fluency across leaders and teams.</p>
+      <div><span class="bento-tag">Capability Sprint</span><span class="bento-tag">Leadership Enablement</span></div>
+    </div>
+    <div class="bento-card" id="workforce-readiness">
+      <div class="bento-num">03 — WORKFORCE</div>
+      <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h3 class="bento-card-title">Workforce Readiness</h3>
+      <p class="bento-card-body">Role-level readiness mapping so every team knows how AI changes their day-to-day work.</p>
+      <div><span class="bento-tag">Role Mapping</span><span class="bento-tag">Change Readiness</span></div>
+    </div>
+    <div class="bento-card" id="advisory">
+      <div class="bento-num">04 — ADVISORY</div>
+      <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+      <h3 class="bento-card-title">Advisory</h3>
+      <p class="bento-card-body">Ongoing strategic counsel for boards and executive teams navigating AI-driven change.</p>
+      <div><span class="bento-tag">Board Counsel</span><span class="bento-tag">Ongoing Support</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="thesis" id="about">
+  <div class="thesis-geo">
+    <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="240" stroke="white" stroke-width="1"/>
+      <circle cx="250" cy="250" r="180" stroke="white" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="120" stroke="white" stroke-width="0.3"/>
+      <line x1="0" y1="250" x2="500" y2="250" stroke="white" stroke-width="0.5"/>
+      <line x1="250" y1="0" x2="250" y2="500" stroke="white" stroke-width="0.5"/>
+      <circle cx="250" cy="70" r="5" fill="#42C8FF"/><circle cx="430" cy="250" r="5" fill="#42C8FF"/><circle cx="250" cy="430" r="5" fill="#42C8FF"/>
+    </svg>
+  </div>
+  <div class="thesis-inner">
+    <div class="section-label on-dark" id="thesisLabel">About NeuroAIQ</div>
+    <h2 class="thesis-headline" id="thesisHead">Adoption fails when it ignores <span class="accent">human psychology</span>.</h2>
+    <div class="thesis-grid" id="thesisCols">
+      <div>
+        <div class="thesis-col-label">Our Philosophy</div>
+        <p class="thesis-col-text">NeuroAIQ combines neuroscience-based capability models with practical AI enablement, so transformation programs measure readiness as rigorously as they measure technology, and actually stick.</p>
+      </div>
+      <div>
+        <div class="thesis-col-label">Our Evidence Base</div>
+        <p class="thesis-col-text">Every engagement builds on the DRIVE&trade; Diagnostic dataset — structured signals from leadership interviews, workforce sentiment and adoption telemetry gathered across enterprise clients.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="framework" id="framework">
+  <div class="framework-header" id="frameworkHeader">
+    <h2 class="framework-title">The LEAD&trade; Framework.</h2>
+    <p class="framework-desc">A structured, four-stage model for turning AI capability into sustained, measurable adoption.</p>
+  </div>
+  <div class="approach-list">
+    <div class="approach-row" id="ar1">
+      <div class="approach-row-num">01</div>
+      <div class="approach-row-title">Learn</div>
+      <div class="approach-row-desc">Diagnose current AI capability, sentiment and adoption signals across the organisation.</div>
+      <div class="approach-row-arrow">&rarr;</div>
+    </div>
+    <div class="approach-row" id="ar2">
+      <div class="approach-row-num">02</div>
+      <div class="approach-row-title">Evolve</div>
+      <div class="approach-row-desc">Build adaptive capability in leaders and teams through targeted, evidence-based interventions.</div>
+      <div class="approach-row-arrow">&rarr;</div>
+    </div>
+    <div class="approach-row" id="ar3">
+      <div class="approach-row-num">03</div>
+      <div class="approach-row-title">Activate</div>
+      <div class="approach-row-desc">Embed AI workflows into real operating rhythms, not just training decks.</div>
+      <div class="approach-row-arrow">&rarr;</div>
+    </div>
+    <div class="approach-row" id="ar4">
+      <div class="approach-row-num">04</div>
+      <div class="approach-row-title">Drive</div>
+      <div class="approach-row-desc">Sustain measurable adoption velocity with ongoing diagnostics and advisory support.</div>
+      <div class="approach-row-arrow">&rarr;</div>
+    </div>
+  </div>
+</section>
+
+<section class="diagnostic">
+  <div class="diagnostic-grid">
+    <div class="diagnostic-left" id="diagLeft">
+      <div class="section-label on-dark">Featured Solution</div>
+      <h2 class="diagnostic-title">DRIVE&trade; Diagnostic</h2>
+      <p class="diagnostic-desc">A structured assessment of your organisation's AI Adoption Quotient, benchmarked against enterprise peers and delivered board-ready in two weeks.</p>
+
+      <div class="readout-card">
+        <div class="readout-inner">
+          <div class="gauge-wrap">
+            <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+              <circle cx="60" cy="60" r="54" stroke-width="10" fill="none" stroke="rgba(245,244,240,0.12)"/>
+              <circle id="gaugeProgress" class="gauge-progress" cx="60" cy="60" r="54" stroke-width="10" fill="none" stroke-linecap="round" stroke="#42C8FF" style="stroke-dasharray:339; stroke-dashoffset:339;"/>
+            </svg>
+            <div class="gauge-center"><span class="gauge-score">82</span><span class="gauge-label">AQ SCORE</span></div>
+          </div>
+          <div class="metrics-mini">
+            <div><div class="metric-mini-labels"><span>Readiness</span><span>78%</span></div><div class="metric-mini-track"><div class="metric-mini-fill" data-value="78"></div></div></div>
+            <div><div class="metric-mini-labels"><span>Capability</span><span>65%</span></div><div class="metric-mini-track"><div class="metric-mini-fill" data-value="65"></div></div></div>
+            <div><div class="metric-mini-labels"><span>Culture</span><span>84%</span></div><div class="metric-mini-track"><div class="metric-mini-fill" data-value="84"></div></div></div>
+            <div><div class="metric-mini-labels"><span>Governance</span><span>71%</span></div><div class="metric-mini-track"><div class="metric-mini-fill" data-value="71"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="diagnostic-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Five-dimension readiness benchmark</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Leadership and workforce sentiment mapping</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Board-ready scorecard and roadmap</li>
+      </ul>
+    </div>
+
+    <div class="diagnostic-form-wrap" id="diagForm">
+      <form id="diagnosticForm">
+        <div class="form-row">
+          <div class="form-group"><label for="fname">First Name <span class="req">*</span></label><input type="text" id="fname" placeholder="Alexandra" required /></div>
+          <div class="form-group"><label for="lname">Last Name <span class="req">*</span></label><input type="text" id="lname" placeholder="Chen" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="company">Company <span class="req">*</span></label><input type="text" id="company" placeholder="Northfield Group" required /></div>
+          <div class="form-group"><label for="role">Title / Role</label><input type="text" id="role" placeholder="Chief People Officer" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="email">Email Address <span class="req">*</span></label><input type="email" id="email" placeholder="a.chen@northfield.com.au" required /></div>
+          <div class="form-group">
+            <label for="size">Company Size</label>
+            <select id="size">
+              <option value="" disabled selected>Select range</option>
+              <option>50 – 200 employees</option>
+              <option>200 – 1,000 employees</option>
+              <option>1,000 – 5,000 employees</option>
+              <option>5,000+ employees</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="interest">Area of Interest</label>
+          <select id="interest">
+            <option value="" disabled selected>Select a solution</option>
+            <option>DRIVE Diagnostic</option>
+            <option>Adaptability Accelerator</option>
+            <option>Workforce Readiness</option>
+            <option>Advisory</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Additional Context (Optional)</label>
+          <textarea id="message" placeholder="Brief overview of your transformation goals..."></textarea>
+        </div>
+        <button class="form-submit" type="submit" id="formSubmit">
+          <span>Start Your Diagnostic</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="insights" id="insights">
+  <div class="insights-header" id="insightsHeader">
+    <div class="section-label">Executive Insights</div>
+    <h2 class="insights-title">Research for AI-ready leaders.</h2>
+  </div>
+  <div class="insights-grid">
+    <div class="insight-card" id="ic1">
+      <div class="insight-meta"><span>LEADERSHIP</span><span>01</span></div>
+      <h3 class="insight-card-title">What separates AI-ready leaders from the rest</h3>
+      <p class="insight-excerpt">Placeholder excerpt — swap in real Executive Insights copy here.</p>
+      <a href="#contact" class="insight-more">Read more &rarr;</a>
+    </div>
+    <div class="insight-card" id="ic2">
+      <div class="insight-meta"><span>RESEARCH</span><span>02</span></div>
+      <h3 class="insight-card-title">Measuring AI Adoption Quotient at scale</h3>
+      <p class="insight-excerpt">Placeholder excerpt — swap in real Executive Insights copy here.</p>
+      <a href="#contact" class="insight-more">Read more &rarr;</a>
+    </div>
+    <div class="insight-card" id="ic3">
+      <div class="insight-meta"><span>STRATEGY</span><span>03</span></div>
+      <h3 class="insight-card-title">The board-level case for adoption diagnostics</h3>
+      <p class="insight-excerpt">Placeholder excerpt — swap in real Executive Insights copy here.</p>
+      <a href="#contact" class="insight-more">Read more &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-accent-line"></div>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <a href="#home" class="footer-logo-link" id="footerLogoLink">
+<img src="logo.svg" alt="NeuroAIQ logo" style="width:34px;height:34px;flex-shrink:0;" loading="lazy" decoding="async">
+        <div class="footer-wordmark">NeuroAIQ&reg;</div>
+      </a>
+      <p class="footer-tagline">"The neuroscience of AI adoption — measured, not assumed."</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-label">Company</div>
+      <ul class="footer-nav-list"><li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-label">Solutions</div>
+      <ul class="footer-nav-list"><li><a href="#drive-diagnostic">DRIVE Diagnostic</a></li><li><a href="#adaptability-accelerator">Adaptability Accelerator</a></li><li><a href="#workforce-readiness">Workforce Readiness</a></li><li><a href="#advisory">Advisory</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-label">Connect</div>
+      <ul class="footer-nav-list"><li><a href="#insights">Executive Insights</a></li><li><a href="mailto:info@neuroaiq.com.au">info@neuroaiq.com.au</a></li><li><a href="https://www.linkedin.com/company/neuroaiq/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-legal">NeuroAIQ works exclusively with enterprise and institutional clients. All diagnostic engagements are confidential and scoped individually. Melbourne, Australia.</p>
+    <div class="footer-bottom-right">
+      <p class="footer-copy">&copy; <span id="year"></span> NeuroAIQ Pty Ltd. NeuroAIQ&reg;, LEAD&trade;, DRIVE&trade; and Adaptability Accelerator&trade; are trademarks of NeuroAIQ Pty Ltd.</p>
+      <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <svg viewBox="0 0 11 11" fill="none"><path d="M5.5 9.5V1.5M1.5 5.5L5.5 1.5L9.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to top
+      </button>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ── CURSOR (fine-pointer devices only) ── */
+  var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var cursor = document.getElementById('cursor');
+  if (canHover && cursor) {
+    document.addEventListener('mousemove', function (e) {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .bento-card, .approach-row, .insight-card, .hero-logo-wrap').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cursor.classList.add('expanded'); });
+      el.addEventListener('mouseleave', function () { cursor.classList.remove('expanded'); });
+    });
+  }
+
+  /* ── SCROLL PROGRESS ── */
+  var scrollLine = document.getElementById('scrollLine');
+  function onScroll() {
+    var h = document.body.scrollHeight - window.innerHeight;
+    var pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+    if (scrollLine) scrollLine.style.width = pct + '%';
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll);
+
+  /* ── SCROLL-SPY (nav active state) ── */
+  var spySections = ['home', 'about', 'insights', 'contact'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  var spyLinks = document.querySelectorAll('.nav-link');
+  if ('IntersectionObserver' in window && spySections.length) {
+    var spyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          spyLinks.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    spySections.forEach(function (el) { spyObserver.observe(el); });
+  }
+
+  /* ── NAV DROPDOWN ── */
+  var navItem = document.getElementById('navSolutionsItem');
+  var navTrigger = document.getElementById('navSolutionsTrigger');
+  if (navItem && navTrigger) {
+    navItem.addEventListener('mouseenter', function () { navItem.classList.add('is-open'); });
+    navItem.addEventListener('mouseleave', function () { navItem.classList.remove('is-open'); });
+    navTrigger.addEventListener('click', function () { navItem.classList.toggle('is-open'); });
+  }
+
+  /* ── MOBILE MENU ── */
+  var mobileMenu = document.getElementById('mobileMenu');
+  var hamburgerBtn = document.getElementById('hamburgerBtn');
+  var iconMenu = document.getElementById('iconMenu');
+  var iconClose = document.getElementById('iconClose');
+  var menuOpen = false;
+
+  function setMenu(open) {
+    menuOpen = open;
+    if (mobileMenu) mobileMenu.classList.toggle('is-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (iconMenu) iconMenu.style.display = open ? 'none' : 'block';
+    if (iconClose) iconClose.style.display = open ? 'block' : 'none';
+  }
+
+  if (hamburgerBtn) hamburgerBtn.addEventListener('click', function () { setMenu(!menuOpen); });
+
+  var mobileSolutions = document.getElementById('mobile-solutions');
+  var mobileSolutionsTrigger = document.getElementById('mobileSolutionsTrigger');
+  if (mobileSolutions && mobileSolutionsTrigger) {
+    mobileSolutionsTrigger.addEventListener('click', function () { mobileSolutions.classList.toggle('is-open'); });
+  }
+
+  document.querySelectorAll('.mobile-menu a').forEach(function (el) {
+    el.addEventListener('click', function () { setMenu(false); });
+  });
+  if (navItem) {
+    document.querySelectorAll('.nav-dropdown a').forEach(function (el) {
+      el.addEventListener('click', function () { navItem.classList.remove('is-open'); });
+    });
+  }
+
+  /* ── HERO LOGO REPLAY ── */
+  var heroLogoWrap = document.getElementById('heroLogoWrap');
+  var heroLogoInner = document.getElementById('heroLogoInner');
+  if (heroLogoWrap && heroLogoInner) {
+    heroLogoWrap.addEventListener('click', function () { heroLogoInner.innerHTML = heroLogoInner.innerHTML; });
+    heroLogoWrap.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        heroLogoInner.innerHTML = heroLogoInner.innerHTML;
+      }
+    });
+  }
+
+  /* ── FORM (client-side only — no backend wired up) ── */
+  var form = document.getElementById('diagnosticForm');
+  var formNote = document.getElementById('formNote');
+  var formSubmit = document.getElementById('formSubmit');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (formSubmit) {
+        formSubmit.querySelector('span').textContent = 'Inquiry Received';
+        formSubmit.style.opacity = '.6';
+        formSubmit.style.pointerEvents = 'none';
+      }
+      if (formNote) formNote.textContent = "Thanks — this is a design preview, so nothing was actually sent. Wire this up to your CRM or inbox before going live.";
+    });
+  }
+
+  /* ── GSAP-DEPENDENT ORCHESTRATION ── */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.set(['#heroEyebrow', '#heroHeadline', '#heroSub', '#heroCta'], { y: 24, opacity: 0 });
+    gsap.set('#heroGeo', { opacity: 0 });
+    var heroTl = gsap.timeline({ delay: .4 });
+    heroTl
+      .to('#heroGeo', { opacity: 1, duration: 1.1, ease: 'power2.out' })
+      .to('#heroEyebrow', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, '-=0.8')
+      .to('#heroHeadline', { opacity: 1, y: 0, duration: .9, ease: 'power2.out' }, '-=0.45')
+      .to('#heroSub', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, '-=0.5')
+      .to('#heroCta', { opacity: 1, y: 0, duration: .6, ease: 'power2.out' }, '-=0.4');
+
+    gsap.set('.metric-item', { y: 20, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '#metrics', start: 'top 82%', once: true,
+      onEnter: function () {
+        gsap.to('.metric-item', { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'power2.out' });
+        var counters = [
+          { el: document.getElementById('c1'), target: 500 },
+          { el: document.getElementById('c2'), target: 40 },
+          { el: document.getElementById('c3'), target: 5 },
+          { el: document.getElementById('c4'), target: 14 }
+        ];
+        counters.forEach(function (c) {
+          var obj = { val: 0 };
+          gsap.to(obj, { val: c.target, duration: 1.8, delay: .2, ease: 'power2.out', onUpdate: function () { c.el.textContent = Math.round(obj.val); } });
+        });
+      }
+    });
+
+    var solutionIds = ['#drive-diagnostic', '#adaptability-accelerator', '#workforce-readiness', '#advisory'];
+    gsap.set('#ledgerHeader', { y: 24, opacity: 0 });
+    gsap.set(solutionIds, { y: 24, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '#solutions', start: 'top 78%', once: true,
+      onEnter: function () {
+        gsap.to('#ledgerHeader', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' });
+        gsap.to(solutionIds, { opacity: 1, y: 0, duration: .7, stagger: .12, delay: .15, ease: 'power2.out' });
+      }
+    });
+
+    gsap.set(['#thesisLabel', '#thesisHead', '#thesisCols'], { y: 24, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '#about', start: 'top 78%', once: true,
+      onEnter: function () {
+        gsap.to('#thesisLabel', { opacity: 1, y: 0, duration: .6, ease: 'power2.out' });
+        gsap.to('#thesisHead', { opacity: 1, y: 0, duration: .8, delay: .15, ease: 'power2.out' });
+        gsap.to('#thesisCols', { opacity: 1, y: 0, duration: .8, delay: .32, ease: 'power2.out' });
+      }
+    });
+
+    gsap.set('#frameworkHeader', { y: 20, opacity: 0 });
+    gsap.set(['#ar1', '#ar2', '#ar3', '#ar4'], { y: 20, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '#framework', start: 'top 78%', once: true,
+      onEnter: function () {
+        gsap.to('#frameworkHeader', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' });
+        gsap.to(['#ar1', '#ar2', '#ar3', '#ar4'], { opacity: 1, y: 0, duration: .6, stagger: .1, delay: .15, ease: 'power2.out' });
+      }
+    });
+
+    gsap.set('#diagLeft', { x: -24, opacity: 0 });
+    gsap.set('#diagForm', { x: 24, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '.diagnostic', start: 'top 72%', once: true,
+      onEnter: function () {
+        gsap.to('#diagLeft', { opacity: 1, x: 0, duration: .8, ease: 'power2.out' });
+        gsap.to('#diagForm', { opacity: 1, x: 0, duration: .8, delay: .15, ease: 'power2.out' });
+        var gauge = document.getElementById('gaugeProgress');
+        if (gauge) gsap.to(gauge, { strokeDashoffset: 61, duration: 1.4, delay: .3, ease: 'power2.out' });
+        gsap.utils.toArray('.metric-mini-fill').forEach(function (el, i) {
+          gsap.to(el, { width: el.getAttribute('data-value') + '%', duration: 1.2, delay: .3 + i * .1, ease: 'power2.out' });
+        });
+      }
+    });
+
+    gsap.set('#insightsHeader', { y: 20, opacity: 0 });
+    gsap.set(['#ic1', '#ic2', '#ic3'], { y: 20, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: '#insights', start: 'top 78%', once: true,
+      onEnter: function () {
+        gsap.to('#insightsHeader', { opacity: 1, y: 0, duration: .6, ease: 'power2.out' });
+        gsap.to(['#ic1', '#ic2', '#ic3'], { opacity: 1, y: 0, duration: .6, stagger: .12, delay: .15, ease: 'power2.out' });
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

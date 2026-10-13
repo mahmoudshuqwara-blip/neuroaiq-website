@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroAIQ — Human readiness for machine intelligence</title>
+<meta name="description" content="NeuroAIQ integrates neuroscience, AI strategy and the Adaptability Quotient so enterprise AI adoption actually holds. Melbourne, Australia.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://prod.spline.design" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   NeuroAIQ — "Low Res"
+   Minimalist pixel. Monochrome interface, chromatic specimen: the
+   UI is near-black hairlines and mono type, and the only saturated
+   thing on the page is the brain — pixelated through an SVG filter
+   so the 3D render obeys the same grid as everything else.
+   Display: Pixelify Sans · Everything else: IBM Plex Mono
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --void:#06080D;
+  --panel:#0A0E15;
+  --panel-2:#0D131C;
+  --line:#1A222E;
+  --line-hi:#2C3A4C;
+
+  --txt:#E6EDF6;
+  --txt-2:#8494A8;
+  --txt-3:#556375;
+
+  --accent:#3DDCFF;
+  --brand:#2E6FF2;
+
+  --px:8px;                 /* the grid everything snaps to */
+  --container:1240px;
+  --gutter:24px;
+  --sp:clamp(72px,7.5vw,116px);
+  --ease:steps(6,end);      /* even the easing is quantised */
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{
+  margin:0; background:var(--void); color:var(--txt-2);
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.9375rem; line-height:1.75; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* 8px pixel grid, barely there */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    linear-gradient(to right, rgba(132,148,168,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(132,148,168,.045) 1px, transparent 1px);
+  background-size:var(--px) var(--px);
+}
+/* Scanlines, kept light. They cross the specimen too, so anything heavier
+   reads as degrading the render rather than texturing the interface. */
+body::after{
+  content:""; position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.2;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px);
+}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button,input,select,textarea{font:inherit; color:inherit}
+ul{margin:0; padding:0; list-style:none}
+p{margin:0}
+h1,h2,h3{margin:0; font-weight:400}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.wrap{width:100%; max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter); position:relative; z-index:2}
+.sec{padding-block:var(--sp); position:relative; z-index:2; overflow-x:clip}
+
+/* ── Type ───────────────────────────────────────────────── */
+.d1,.d2,.d3{font-family:'Pixelify Sans',monospace; color:var(--txt); font-weight:600; line-height:1.04; letter-spacing:-.01em}
+.d1{font-size:clamp(2.6rem,6.4vw,5.2rem); font-weight:700}
+.d2{font-size:clamp(1.75rem,3.2vw,2.7rem); line-height:1.1}
+.d3{font-size:1.0625rem; font-weight:600; line-height:1.3}
+.d1 em,.d2 em{font-style:normal; color:var(--accent)}
+
+.lbl{font-size:.6875rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--txt-3)}
+.lbl--a{color:var(--accent)}
+.lede{font-size:.9375rem; line-height:1.8; color:var(--txt-2)}
+
+/* section head: [■] 01 / LABEL ───────────── */
+.sec-hd{display:flex; align-items:center; gap:12px; margin-bottom:26px}
+.sec-hd i{width:8px; height:8px; background:var(--accent); flex-shrink:0}
+.sec-hd::after{content:""; flex:1; height:1px; background:var(--line)}
+
+/* ── Buttons: square, invert on hover ───────────────────── */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:14px 22px; border:1px solid var(--line-hi); border-radius:0;
+  font-family:'IBM Plex Mono',monospace; font-size:.8125rem; font-weight:500;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer; background:transparent; color:var(--txt);
+  transition:background-color .12s var(--ease), color .12s var(--ease), border-color .12s var(--ease);
+}
+.btn .ar{width:14px; height:14px}
+.btn--fill{background:var(--accent); color:var(--void); border-color:var(--accent); font-weight:600}
+.btn--fill:hover{background:var(--txt); border-color:var(--txt)}
+.btn--wire:hover{background:var(--txt); color:var(--void); border-color:var(--txt)}
+.btn--sm{padding:9px 16px; font-size:.6875rem}
+
+/* ══════════ Header ══════════ */
+.hd{position:sticky; top:0; z-index:50; background:rgba(6,8,13,.9); border-bottom:1px solid transparent; transition:border-color .2s var(--ease)}
+.hd.stuck{border-bottom-color:var(--line)}
+.hd-in{display:flex; align-items:center; justify-content:space-between; height:64px; gap:24px}
+.mark{display:flex; align-items:center; gap:10px}
+.mark .chip{display:grid; place-items:center; width:32px; height:32px; background:var(--txt); flex-shrink:0}
+.mark .chip img{width:22px}
+.mark-txt{font-family:'Pixelify Sans',monospace; font-size:1.15rem; font-weight:700; color:var(--txt); letter-spacing:.01em}
+.mark-txt i{font-style:normal; color:var(--accent)}
+.nav{display:flex; gap:24px}
+.nav a{font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--txt-3); transition:color .12s var(--ease)}
+.nav a:hover{color:var(--accent)}
+.hd-end{display:flex; align-items:center; gap:10px}
+.burger{display:none; width:38px; height:38px; border:1px solid var(--line-hi); background:transparent; cursor:pointer; align-items:center; justify-content:center; padding:0}
+.burger span{display:block; width:14px; height:2px; background:var(--txt); position:relative; transition:background-color .1s}
+.burger span::before,.burger span::after{content:""; position:absolute; left:0; width:14px; height:2px; background:var(--txt); transition:transform .15s var(--ease), top .15s var(--ease)}
+.burger span::before{top:-5px}
+.burger span::after{top:5px}
+.burger.on span{background:transparent}
+.burger.on span::before{top:0; transform:rotate(45deg)}
+.burger.on span::after{top:0; transform:rotate(-45deg)}
+.sheet{display:none; position:fixed; inset:64px 0 0; z-index:49; background:var(--void); padding:8px var(--gutter) 40px; overflow-y:auto}
+.sheet.on{display:block}
+.sheet a{display:flex; align-items:center; gap:14px; padding:18px 2px; font-family:'Pixelify Sans',monospace; font-size:1.35rem; font-weight:600; color:var(--txt); border-bottom:1px solid var(--line)}
+.sheet a b{font-family:'IBM Plex Mono',monospace; font-size:.6875rem; font-weight:500; color:var(--txt-3)}
+.sheet .btn{margin-top:24px; width:100%; border-bottom:none}
+
+/* ══════════ Hero ══════════ */
+.hero{padding-block:clamp(40px,5vw,72px) clamp(48px,5vw,80px); position:relative; z-index:2}
+.hero-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.04fr); gap:clamp(28px,3.4vw,56px); align-items:center}
+/* align the marker to the first line, not the centre of a wrapped block */
+.hero-eyebrow{display:inline-flex; align-items:flex-start; gap:10px; margin-bottom:24px}
+.hero-eyebrow i{width:8px; height:8px; margin-top:.42em; flex-shrink:0; background:var(--accent); animation:blink 1.2s steps(2,end) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.15}}
+.hero .d1{margin-bottom:22px}
+/* terminal cursor */
+.cursor{display:inline-block; width:.42em; height:.86em; background:var(--accent); vertical-align:-.06em; margin-left:.12em; animation:blink 1.05s steps(2,end) infinite}
+.hero-sub{max-width:44ch; margin-bottom:30px}
+.hero-cta{display:flex; flex-wrap:wrap; gap:10px}
+
+/* stat strip, drawn as a table of cells */
+.stats{display:grid; grid-template-columns:repeat(3,1fr); margin-top:clamp(34px,4vw,52px); border:1px solid var(--line)}
+.stats > div{padding:16px 18px; border-right:1px solid var(--line)}
+.stats > div:last-child{border-right:none}
+.stats b{display:block; font-family:'Pixelify Sans',monospace; font-size:1.55rem; font-weight:700; color:var(--txt); line-height:1}
+.stats span{display:block; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--txt-3); margin-top:8px}
+
+/* ── The specimen viewport ──
+   Framed like a monitor rather than masked into the page: a visible
+   panel is honest to the pixel idiom and sidesteps blending the
+   scene's own opaque backdrop into the page. */
+.vp{position:relative; border:1px solid var(--line-hi); background:#000}
+.vp-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 12px; border-bottom:1px solid var(--line-hi); background:var(--panel)}
+.vp-bar .lbl{color:var(--txt-2)}
+.vp-live{display:inline-flex; align-items:center; gap:7px}
+.vp-live i{width:6px; height:6px; background:var(--accent); animation:blink 1.6s steps(2,end) infinite}
+.vp-body{position:relative; aspect-ratio:1/.94; overflow:hidden}
+/* The specimen renders clean. The pixel idiom lives in the interface around it —
+   the frame, the grid, the type — not in the render itself. */
+.vp-body spline-viewer{width:100%; height:100%; display:block}
+/* corner registration marks */
+.vp-body::before,.vp-body::after{content:""; position:absolute; width:14px; height:14px; pointer-events:none; z-index:3}
+.vp-body::before{top:8px; left:8px; border-top:1px solid var(--line-hi); border-left:1px solid var(--line-hi)}
+.vp-body::after{bottom:8px; right:8px; border-bottom:1px solid var(--line-hi); border-right:1px solid var(--line-hi)}
+.vp-foot{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 12px; border-top:1px solid var(--line-hi); background:var(--panel)}
+.vp-foot a{color:var(--txt-3); transition:color .12s var(--ease)}
+.vp-foot a:hover{color:var(--accent)}
+
+.vp-load{position:absolute; inset:0; z-index:4; display:grid; place-items:center; gap:0; transition:opacity .3s var(--ease)}
+.vp-load.gone{opacity:0; pointer-events:none}
+.vp-load .bars{display:flex; gap:4px}
+.vp-load .bars i{width:8px; height:20px; background:var(--line-hi); animation:load 1s steps(2,end) infinite}
+.vp-load .bars i:nth-child(2){animation-delay:.12s}
+.vp-load .bars i:nth-child(3){animation-delay:.24s}
+.vp-load .bars i:nth-child(4){animation-delay:.36s}
+@keyframes load{0%,49%{background:var(--line-hi)}50%,100%{background:var(--accent)}}
+.vp-fallback{position:absolute; inset:0; z-index:1; display:none; place-items:center; background:#000}
+.vp-fallback.on{display:grid}
+.vp-fallback img{width:min(52%,260px); image-rendering:pixelated}
+
+/* ══════════ Framework ══════════ */
+.quad{display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); margin-top:clamp(32px,3.6vw,48px)}
+.quad li{padding:24px 20px; border-right:1px solid var(--line); position:relative; transition:background-color .12s var(--ease)}
+.quad li:last-child{border-right:none}
+.quad li:hover{background:var(--panel)}
+.quad b{display:block; font-family:'Pixelify Sans',monospace; font-size:clamp(1.7rem,2.6vw,2.3rem); font-weight:700; color:var(--txt); line-height:1; margin-bottom:14px}
+.quad b u{text-decoration:none; color:var(--accent)}
+.quad em{display:block; font-style:normal; font-size:.625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--txt-3); margin-bottom:10px}
+.quad p{font-size:.8125rem; line-height:1.7}
+
+/* ══════════ Engagements ══════════ */
+.eng{border-top:1px solid var(--line); margin-top:clamp(30px,3.4vw,44px)}
+.eng a{
+  display:grid; grid-template-columns:20px 132px minmax(0,1fr) 120px; gap:20px; align-items:center;
+  padding:20px 14px; margin-inline:-14px; border-bottom:1px solid var(--line);
+  position:relative; transition:background-color .12s var(--ease);
+}
+.eng a:hover{background:var(--panel)}
+.eng .n{font-size:.6875rem; color:var(--txt-3)}
+.eng a:hover .n{color:var(--accent)}
+.eng .fmt{font-size:.6875rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.eng .desc{font-size:.8125rem; line-height:1.65}
+.eng .dur{font-size:.6875rem; color:var(--txt-3); text-align:right; letter-spacing:.06em}
+
+/* ══════════ AQ Index — a segmented readout ══════════ */
+.aq-grid{display:grid; grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr); gap:clamp(32px,4vw,64px); align-items:center}
+.claims{margin-top:24px; border-top:1px solid var(--line)}
+.claims li{padding:14px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:8px minmax(0,1fr); gap:14px; align-items:start}
+.claims i{width:8px; height:8px; background:var(--line-hi); margin-top:8px}
+.claims li:hover i{background:var(--accent)}
+.claims p{font-size:.8125rem; line-height:1.7}
+
+.gauge{border:1px solid var(--line-hi); background:var(--panel)}
+.gauge-hd{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px; border-bottom:1px solid var(--line-hi)}
+.gauge-in{padding:26px 14px 18px}
+/* 25 discrete cells rather than a continuous bar — the pixel reading of a meter */
+.cells{display:grid; grid-template-columns:repeat(25,1fr); gap:2px; margin-bottom:12px}
+.cells i{height:24px; background:var(--line); transition:background-color .1s var(--ease)}
+.cells i.on{background:var(--brand)}
+.cells i.hi{background:var(--accent)}
+.cells i.mark{outline:1px solid var(--txt); outline-offset:1px}
+.axis{display:flex; justify-content:space-between; font-size:.625rem; letter-spacing:.1em; color:var(--txt-3); margin-bottom:20px}
+.reads{display:grid; grid-template-columns:1fr 1fr; gap:2px; border:1px solid var(--line)}
+.reads > div{padding:14px; background:var(--panel-2)}
+.reads b{display:block; font-family:'Pixelify Sans',monospace; font-size:1.9rem; font-weight:700; line-height:1; color:var(--txt-2)}
+.reads > div:last-child b{color:var(--accent)}
+.reads span{display:block; font-size:.625rem; letter-spacing:.13em; text-transform:uppercase; color:var(--txt-3); margin-top:8px}
+.bands{display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); border-top:none}
+.bands li{padding:11px 12px; border-right:1px solid var(--line)}
+.bands li:last-child{border-right:none}
+.bands b{display:block; font-size:.625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--txt); font-weight:500}
+.bands span{display:block; font-size:.625rem; line-height:1.55; color:var(--txt-3); margin-top:5px}
+.gauge-foot{padding:12px 14px; border-top:1px solid var(--line-hi); font-size:.6875rem; line-height:1.65; color:var(--txt-3)}
+
+/* ══════════ Method ══════════ */
+.steps{display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); margin-top:clamp(30px,3.4vw,44px)}
+.steps li{padding:22px 20px; border-right:1px solid var(--line); transition:background-color .12s var(--ease)}
+.steps li:last-child{border-right:none}
+.steps li:hover{background:var(--panel)}
+.steps .wk{display:flex; align-items:center; gap:9px; margin-bottom:14px}
+.steps .wk i{width:8px; height:8px; flex-shrink:0}
+.steps li:nth-child(1) .wk i{background:#1E3A6B}
+.steps li:nth-child(2) .wk i{background:var(--brand)}
+.steps li:nth-child(3) .wk i{background:#25A8E8}
+.steps li:nth-child(4) .wk i{background:var(--accent)}
+.steps h3{margin-bottom:9px}
+.steps p{font-size:.8125rem; line-height:1.7; color:var(--txt-3)}
+
+/* ══════════ Briefing ══════════ */
+.bf-grid{display:grid; grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr); gap:clamp(32px,4vw,60px); align-items:start}
+.deets{margin-top:26px; border-top:1px solid var(--line)}
+.deets > div{padding:13px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:110px minmax(0,1fr); gap:14px; align-items:baseline}
+.deets dt{font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--txt-3)}
+.deets dd{margin:0; font-size:.8125rem; color:var(--txt)}
+.deets a:hover{color:var(--accent)}
+
+.form{border:1px solid var(--line-hi); background:var(--panel)}
+.form-hd{display:flex; align-items:center; justify-content:space-between; padding:11px 14px; border-bottom:1px solid var(--line-hi)}
+.form-in{padding:22px 18px 20px}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.f{display:flex; flex-direction:column; gap:7px; margin-bottom:16px}
+.f label{font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--txt-2)}
+.f label i{color:var(--accent); font-style:normal}
+.f input,.f select,.f textarea{
+  width:100%; padding:11px 12px; border:1px solid var(--line-hi); border-radius:0;
+  background:var(--void); color:var(--txt); font-size:.8125rem; font-family:'IBM Plex Mono',monospace;
+  appearance:none; -webkit-appearance:none;
+  transition:border-color .12s var(--ease), background-color .12s var(--ease);
+}
+.f textarea{resize:vertical; min-height:88px; line-height:1.7}
+.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M0 3h2v2H0zM2 5h2v2H2zM4 7h2V5H4zM6 5h2V3H6zM8 3h2V1H8zM0 1h2v2H0z' fill='%238494A8'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px; cursor:pointer}
+.f select option{background:var(--panel); color:var(--txt)}
+.f input::placeholder,.f textarea::placeholder{color:var(--txt-3)}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none; border-color:var(--accent); background:var(--panel-2)}
+.f.err input,.f.err select,.f.err textarea{border-color:#F2617A}
+.f-msg{font-size:.625rem; letter-spacing:.06em; color:#F2617A; display:none}
+.f.err .f-msg{display:block}
+.form-foot{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:18px; padding-top:16px; border-top:1px solid var(--line)}
+.form-foot .btn{flex:1 1 190px}
+.form-foot p{flex:1 1 170px; font-size:.625rem; line-height:1.7; color:var(--txt-3)}
+.said{display:none; align-items:flex-start; gap:10px; margin-top:16px; padding:12px 14px; border:1px solid var(--accent); background:rgba(61,220,255,.07); font-size:.75rem; line-height:1.7; color:var(--txt)}
+.said.on{display:flex}
+.said i{width:8px; height:8px; background:var(--accent); flex-shrink:0; margin-top:6px}
+.said.bad{border-color:#F2617A; background:rgba(242,97,122,.08)}
+.said.bad i{background:#F2617A}
+
+/* ══════════ Footer ══════════ */
+.ft{border-top:1px solid var(--line); padding-block:32px 26px; position:relative; z-index:2}
+.ft-in{display:flex; justify-content:space-between; align-items:center; gap:20px 36px; flex-wrap:wrap}
+.ft-mark{display:flex; align-items:center; gap:10px}
+.ft-mark .chip{display:grid; place-items:center; width:30px; height:30px; background:var(--txt)}
+.ft-mark .chip img{width:21px}
+.ft-mark span{font-family:'Pixelify Sans',monospace; font-size:1.05rem; font-weight:700; color:var(--txt)}
+.ft-mark span i{font-style:normal; color:var(--accent)}
+.ft nav{display:flex; gap:20px; flex-wrap:wrap}
+.ft nav a{font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--txt-3); transition:color .12s var(--ease)}
+.ft nav a:hover{color:var(--accent)}
+.ft-btm{margin-top:22px; padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px 28px; flex-wrap:wrap; font-size:.625rem; letter-spacing:.1em; color:var(--txt-3)}
+
+/* ══════════ Motion ══════════ */
+.rise{opacity:0}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+  .rise{opacity:1 !important; transform:none !important}
+}
+
+/* ══════════ Responsive ══════════ */
+@media (max-width:1040px){
+  .hero-grid{grid-template-columns:1fr; gap:36px}
+  .aq-grid,.bf-grid{grid-template-columns:1fr; gap:34px}
+  .quad{grid-template-columns:1fr 1fr}
+  .quad li:nth-child(2){border-right:none}
+  .quad li:nth-child(1),.quad li:nth-child(2){border-bottom:1px solid var(--line)}
+  .steps{grid-template-columns:1fr 1fr}
+  .steps li:nth-child(2){border-right:none}
+  .steps li:nth-child(1),.steps li:nth-child(2){border-bottom:1px solid var(--line)}
+}
+@media (max-width:880px){
+  .nav{display:none}
+  .burger{display:flex}
+  .hd-end .btn{display:none}
+  .eng a{grid-template-columns:20px 118px minmax(0,1fr); gap:16px}
+  .eng .dur{display:none}
+}
+@media (max-width:680px){
+  :root{--gutter:16px}
+  .hd-in{height:56px}
+  .sheet{inset-block-start:56px}
+  .btn{white-space:normal; text-align:center}
+  .hero-cta .btn{flex:1 1 100%}
+  .stats{grid-template-columns:1fr}
+  .stats > div{border-right:none; border-bottom:1px solid var(--line)}
+  .stats > div:last-child{border-bottom:none}
+  .quad{grid-template-columns:1fr}
+  .quad li{border-right:none; border-bottom:1px solid var(--line)}
+  .quad li:last-child{border-bottom:none}
+  .eng a{grid-template-columns:20px minmax(0,1fr); gap:12px; padding:16px 12px; margin-inline:-12px}
+  .eng .fmt{grid-column:2}
+  .steps{grid-template-columns:1fr}
+  .steps li{border-right:none; border-bottom:1px solid var(--line)}
+  .steps li:last-child{border-bottom:none}
+  .cells{grid-template-columns:repeat(25,1fr); gap:1px}
+  .cells i{height:18px}
+  .bands{grid-template-columns:1fr 1fr}
+  .bands li:nth-child(2){border-right:none}
+  .bands li:nth-child(1),.bands li:nth-child(2){border-bottom:1px solid var(--line)}
+  .pair{grid-template-columns:1fr; gap:0}
+  .deets > div{grid-template-columns:1fr; gap:4px}
+  .ft-in{flex-direction:column; align-items:flex-start}
+}
+</style>
+<noscript><style>.rise{opacity:1 !important}.vp-load{display:none}</style></noscript>
+</head>
+<body>
+
+<header class="hd" id="hd">
+  <div class="wrap">
+    <div class="hd-in">
+      <a href="#top" class="mark" aria-label="NeuroAIQ home">
+        <span class="chip"><img src="logo.png" alt="NeuroAIQ"></span>
+        <span class="mark-txt">Neuro<i>AIQ</i></span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#framework">Framework</a>
+        <a href="#work">Engagements</a>
+        <a href="#aq">AQ Index</a>
+        <a href="#method">Method</a>
+      </nav>
+      <div class="hd-end">
+        <a href="#briefing" class="btn btn--fill btn--sm">Book briefing</a>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sheet"><span></span></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet">
+  <div class="wrap" style="padding-inline:0">
+    <a href="#framework"><b>01</b> Framework</a>
+    <a href="#work"><b>02</b> Engagements</a>
+    <a href="#aq"><b>03</b> AQ Index</a>
+    <a href="#method"><b>04</b> Method</a>
+    <a href="#briefing" class="btn btn--fill">Book briefing</a>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- ══════════ Hero ══════════ -->
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+
+        <div>
+          <span class="lbl lbl--a hero-eyebrow rise" data-hero><i></i>Neuroscience · AI · Adaptability · Melbourne</span>
+          <h1 class="d1 rise" data-hero>Human readiness for <em>machine intelligence</em><span class="cursor" aria-hidden="true"></span></h1>
+          <p class="lede hero-sub rise" data-hero>
+            The technology arrives fully formed. The organisation does not. NeuroAIQ builds the readiness,
+            the governance and the measurable adaptability that decide whether AI adoption holds.
+          </p>
+          <div class="hero-cta rise" data-hero>
+            <a href="#briefing" class="btn btn--fill">
+              Book a briefing
+              <svg class="ar" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 2h2v2H8zM10 4h2v2h-2zM12 6h2v2h-2zM2 6h10v2H2zM12 8h2v2h-2zM10 10h2v2h-2zM8 12h2v2H8z"/></svg>
+            </a>
+            <a href="#framework" class="btn btn--wire">Framework</a>
+          </div>
+        </div>
+
+        <!-- specimen viewport -->
+        <div class="vp rise" data-hero id="vp">
+          <div class="vp-bar">
+            <span class="lbl">Specimen 01 · Cortex</span>
+            <span class="vp-live lbl"><i></i>Live</span>
+          </div>
+          <div class="vp-body">
+            <div class="vp-fallback" id="vpFallback" aria-hidden="true"><img src="logo.png" alt=""></div>
+            <spline-viewer id="sv" url="https://prod.spline.design/PDI32vU3UW34rinc/scene.splinecode"></spline-viewer>
+            <div class="vp-load" id="vpLoad" aria-hidden="true">
+              <span class="bars"><i></i><i></i><i></i><i></i></span>
+            </div>
+          </div>
+          <div class="vp-foot">
+            <span class="lbl">WebGL · Real-time</span>
+            <span class="lbl" id="vpHint">Drag to rotate</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="stats rise" data-hero>
+        <div><b>4×</b><span>Adoption velocity</span></div>
+        <div><b>0–100</b><span>AQ index scale</span></div>
+        <div><b>45 min</b><span>Executive briefing</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ Framework ══════════ -->
+  <section class="sec" id="framework">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><i></i><span class="lbl">01 / Framework</span></div>
+      <div style="max-width:52ch">
+        <h2 class="d2 rise" data-in>Four disciplines. <em>The name is the method.</em></h2>
+        <p class="lede rise" data-in style="margin-top:18px">
+          AI programs rarely fail on technology. They fail on absorption — capability compounds while the
+          organisation adapts in a straight line.
+        </p>
+      </div>
+
+      <ul class="quad">
+        <li class="rise" data-in>
+          <b>Neuro</b><em>Human layer</em>
+          <p>Plasticity, threat-response and psychological safety — why teams resist, and what makes new behaviour stick.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>AI</b><em>Capability layer</em>
+          <p>Use-case prioritisation through to workflow deployment, with guardrails and evidence of value.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>A<u>Q</u></b><em>Velocity layer</em>
+          <p>How fast your organisation absorbs change. We baseline it by function, then lift it.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>I<u>Q</u></b><em>Systems layer</em>
+          <p>Governance, architecture and business logic, so every AI decision stays defensible.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ Engagements ══════════ -->
+  <section class="sec" id="work">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><i></i><span class="lbl">02 / Engagements</span></div>
+      <h2 class="d2 rise" data-in>Five ways to work with us.</h2>
+
+      <div class="eng">
+        <a href="#briefing" class="rise" data-in>
+          <span class="n">01</span>
+          <span class="fmt">Embedded</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:4px">AI change enablement &amp; mindset coaching</b>Closing the gap between the announcement and the habit.</span>
+          <span class="dur">8–16 weeks</span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="n">02</span>
+          <span class="fmt">Advisory</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:4px">Executive leadership &amp; cognitive readiness</b>Confidence at the top sets the ceiling for adoption below.</span>
+          <span class="dur">6–12 weeks</span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="n">03</span>
+          <span class="fmt">Strategy</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:4px">Strategic AI planning &amp; governance</b>A defensible route from ambition to architecture.</span>
+          <span class="dur">10–14 weeks</span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="n">04</span>
+          <span class="fmt">Delivery</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:4px">Program &amp; project management</b>Senior delivery leadership for multi-stream transformation.</span>
+          <span class="dur">3–9 months</span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="n">05</span>
+          <span class="fmt">Workshop</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:4px">Custom corporate training &amp; workshops</b>Built on your workflows and your data, not generic tool demos.</span>
+          <span class="dur">1–3 days</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ AQ Index ══════════ -->
+  <section class="sec" id="aq">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><i></i><span class="lbl">03 / The science of AQ</span></div>
+      <div class="aq-grid">
+        <div>
+          <h2 class="d2 rise" data-in>Adaptability is no longer a trait. <em>It's a reading.</em></h2>
+          <ul class="claims">
+            <li class="rise" data-in><i></i><p>Ambiguity is processed as threat — until that is addressed, training underdelivers.</p></li>
+            <li class="rise" data-in><i></i><p>Pathways strengthen through spaced, contextual practice, not one-off workshops.</p></li>
+            <li class="rise" data-in><i></i><p>What gets measured gets sustained. We score AQ by function and track it.</p></li>
+          </ul>
+        </div>
+
+        <div class="gauge rise" data-in>
+          <div class="gauge-hd">
+            <span class="lbl lbl--a">NeuroAIQ AQ Index</span>
+            <span class="lbl">0–100 · by function</span>
+          </div>
+          <div class="gauge-in">
+            <div class="cells" id="cells" aria-hidden="true"></div>
+            <div class="axis"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+            <div class="reads">
+              <div><b id="readNow">41</b><span>Typical baseline</span></div>
+              <div><b id="readTgt">68</b><span>Post-engagement</span></div>
+            </div>
+            <ul class="bands">
+              <li><b>0–25 Fragile</b><span>Change lands on individuals, then is lost</span></li>
+              <li><b>26–50 Reactive</b><span>Adapts under pressure, at cost to delivery</span></li>
+              <li><b>51–75 Responsive</b><span>Absorbs change without stalling core work</span></li>
+              <li><b>76–100 Adaptive</b><span>Continuous change as operating condition</span></li>
+            </ul>
+          </div>
+          <p class="gauge-foot">Illustrative. Every engagement sets its own baseline during Assess &amp; Decode — adaptability is almost never evenly distributed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ Method ══════════ -->
+  <section class="sec" id="method">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><i></i><span class="lbl">04 / Method</span></div>
+      <h2 class="d2 rise" data-in>Four stages. <em>They overlap.</em></h2>
+
+      <ul class="steps">
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="lbl">Weeks 1–4</span></div>
+          <h3 class="d3">Assess &amp; decode</h3>
+          <p>Cognitive and AI readiness diagnostic. Capability, data maturity, resistance patterns, AQ baseline.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="lbl">Weeks 3–8</span></div>
+          <h3 class="d3">Rewire &amp; align</h3>
+          <p>Leadership alignment and neuroscience-based communication. One narrative, less perceived threat.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="lbl">Weeks 6–16</span></div>
+          <h3 class="d3">Integrate &amp; upskill</h3>
+          <p>Workflow integration with role-specific training. Capability built inside live work.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="lbl">Week 14 on</span></div>
+          <h3 class="d3">Sustain &amp; evolve</h3>
+          <p>Reinforcement and tracking. Adoption moves into business reporting, then we hand over.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ Briefing ══════════ -->
+  <section class="sec" id="briefing">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><i></i><span class="lbl">05 / Executive briefing</span></div>
+      <div class="bf-grid">
+
+        <div>
+          <h2 class="d2 rise" data-in>Pressure-test your <em>transformation.</em></h2>
+          <p class="lede rise" data-in style="margin-top:16px">
+            A confidential 45 minutes. We review your AI ambition, name the cognitive and governance risks
+            most likely to derail it, and outline what an engagement would look like.
+          </p>
+          <dl class="deets rise" data-in>
+            <div><dt>Location</dt><dd>Melbourne, Victoria, Australia</dd></div>
+            <div><dt>Enquiries</dt><dd><a href="mailto:hello@neuroaiq.com.au">hello@neuroaiq.com.au</a></dd></div>
+            <div><dt>Hours</dt><dd>Mon–Fri, 9:00–18:00 AEST</dd></div>
+            <div><dt>Delivery</dt><dd>On site across Australia, virtual worldwide</dd></div>
+          </dl>
+        </div>
+
+        <div class="form rise" data-in>
+          <div class="form-hd">
+            <span class="lbl lbl--a">Request briefing</span>
+            <span class="lbl">Encrypted · Confidential</span>
+          </div>
+          <div class="form-in">
+            <form id="frm" novalidate>
+              <div class="pair">
+                <div class="f">
+                  <label for="name">Full name <i>*</i></label>
+                  <input type="text" id="name" placeholder="Jane Whitfield" autocomplete="name" required>
+                  <span class="f-msg">Enter your full name</span>
+                </div>
+                <div class="f">
+                  <label for="company">Company <i>*</i></label>
+                  <input type="text" id="company" placeholder="Organisation" autocomplete="organization" required>
+                  <span class="f-msg">Enter your organisation</span>
+                </div>
+              </div>
+              <div class="f">
+                <label for="email">Work email <i>*</i></label>
+                <input type="email" id="email" placeholder="jane@company.com.au" autocomplete="email" required>
+                <span class="f-msg">Enter a valid work email</span>
+              </div>
+              <div class="f">
+                <label for="focus">Transformation focus <i>*</i></label>
+                <select id="focus" required>
+                  <option value="" selected disabled>Select priority</option>
+                  <option>AI change enablement &amp; coaching</option>
+                  <option>Executive leadership &amp; readiness</option>
+                  <option>Strategic AI planning &amp; governance</option>
+                  <option>Program &amp; project management</option>
+                  <option>Corporate training &amp; workshops</option>
+                  <option>Organisation-wide AQ assessment</option>
+                  <option>Not yet defined — seeking guidance</option>
+                </select>
+                <span class="f-msg">Choose a focus area</span>
+              </div>
+              <div class="f">
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Your initiative, the timeline, and the outcome you need."></textarea>
+              </div>
+              <div class="form-foot">
+                <button type="submit" class="btn btn--fill">
+                  Send request
+                  <svg class="ar" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 2h2v2H8zM10 4h2v2h-2zM12 6h2v2h-2zM2 6h10v2H2zM12 8h2v2h-2zM10 10h2v2h-2zM8 12h2v2H8z"/></svg>
+                </button>
+                <p>Reply within one business day.</p>
+              </div>
+              <div class="said" id="said" role="status" aria-live="polite">
+                <i aria-hidden="true"></i><span id="saidTxt"></span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-in">
+      <a href="#top" class="ft-mark" aria-label="NeuroAIQ home">
+        <span class="chip"><img src="logo.png" alt="NeuroAIQ"></span>
+        <span>Neuro<i>AIQ</i></span>
+      </a>
+      <nav aria-label="Footer">
+        <a href="#framework">Framework</a>
+        <a href="#work">Engagements</a>
+        <a href="#aq">AQ Index</a>
+        <a href="#method">Method</a>
+        <a href="mailto:hello@neuroaiq.com.au">hello@neuroaiq.com.au</a>
+      </nav>
+    </div>
+    <div class="ft-btm">
+      <p>© 2026 NeuroAIQ · Founded 2025 · Melbourne VIC</p>
+      <p>Neuroscience · Artificial intelligence · Adaptability · Intelligence</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.98/build/spline-viewer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ════════════ Specimen ════════════
+     The viewer's own load event is unreliable, so readiness is detected by
+     watching for the canvas it mounts into its shadow root. */
+  var sv = $('sv'), vp = $('vp'), load = $('vpLoad'), fb = $('vpFallback');
+
+  (function watch() {
+    var waited = 0, iv = setInterval(function () {
+      waited += 140;
+      if (sv && sv.shadowRoot && sv.shadowRoot.querySelector('canvas')) {
+        clearInterval(iv);
+        setTimeout(function () { if (load) load.classList.add('gone'); }, 450);
+        return;
+      }
+      if (waited > 15000) {
+        clearInterval(iv);
+        if (fb) fb.classList.add('on');
+        if (load) load.classList.add('gone');
+      }
+    }, 140);
+  })();
+
+  /* Dragging the scene competes with scrolling on touch, so it is mouse-only —
+     and the panel should not advertise a gesture the device cannot perform.
+     Evaluated live rather than once at load: input capability can resolve after
+     first paint, and hybrids switch between modes mid-session. */
+  var touchMQ = window.matchMedia('(hover: none), (pointer: coarse)');
+  function applyInputMode() {
+    var coarse = touchMQ.matches;
+    if (sv) sv.style.pointerEvents = coarse ? 'none' : '';
+    var hint = $('vpHint');
+    if (hint) hint.textContent = coarse ? 'Auto-rotating' : 'Drag to rotate';
+  }
+  applyInputMode();
+  if (touchMQ.addEventListener) touchMQ.addEventListener('change', applyInputMode);
+  else if (touchMQ.addListener) touchMQ.addListener(applyInputMode);
+
+  /* Idle the WebGL scene once the viewport is off-screen. */
+  if ('IntersectionObserver' in window && vp) {
+    new IntersectionObserver(function (en) {
+      vp.style.visibility = en[en.length - 1].isIntersecting ? 'visible' : 'hidden';
+    }, { threshold: 0 }).observe(vp);
+  }
+
+  /* ════════════ AQ cells ════════════
+     25 cells across 0–100, so each cell is 4 points. Baseline and target are
+     outlined rather than filled, which keeps the reading legible at this scale. */
+  var CELLS = 25, BASE = 41, TARGET = 68;
+  var cellsEl = $('cells');
+  if (cellsEl) {
+    for (var i = 0; i < CELLS; i++) {
+      var b = document.createElement('i');
+      b.dataset.v = String((i + 1) * (100 / CELLS));
+      cellsEl.appendChild(b);
+    }
+  }
+  function paintCells(value) {
+    if (!cellsEl) return;
+    var kids = cellsEl.children;
+    for (var i = 0; i < kids.length; i++) {
+      var v = (i + 1) * (100 / CELLS);
+      kids[i].className = '';
+      if (v <= value) kids[i].classList.add(v > BASE ? 'hi' : 'on');
+      if (Math.abs(v - BASE) < (100 / CELLS) / 2 || Math.abs(v - TARGET) < (100 / CELLS) / 2) {
+        kids[i].classList.add('mark');
+      }
+    }
+  }
+  paintCells(0);
+
+  /* ════════════ Header ════════════ */
+  var hd = $('hd');
+  var onScroll = function () { hd.classList.toggle('stuck', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ════════════ Mobile sheet ════════════ */
+  var burger = $('burger'), sheet = $('sheet');
+  var shut = function () {
+    sheet.classList.remove('on'); burger.classList.remove('on');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+    document.body.style.overflow = '';
+  };
+  burger.addEventListener('click', function () {
+    var open = sheet.classList.toggle('on');
+    burger.classList.toggle('on', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', shut); });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') shut(); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 880) shut(); });
+
+  /* ════════════ Form ════════════ */
+  var frm = $('frm'), said = $('said'), saidTxt = $('saidTxt');
+  var isEmail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
+
+  frm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    frm.querySelectorAll('[required]').forEach(function (el) {
+      var v = el.value.trim();
+      var ok = v !== '' && (el.type !== 'email' || isEmail(v));
+      el.closest('.f').classList.toggle('err', !ok);
+      if (!ok && !firstBad) firstBad = el;
+    });
+    if (firstBad) {
+      said.classList.add('on', 'bad');
+      saidTxt.textContent = 'ERROR — check the highlighted fields, then send again.';
+      firstBad.focus();
+      return;
+    }
+    var first = $('name').value.trim().split(/\s+/)[0];
+    said.classList.add('on'); said.classList.remove('bad');
+    saidTxt.textContent = 'SENT — thank you, ' + first + '. A senior transformation lead will reply within one business day.';
+    frm.reset();
+  });
+  frm.querySelectorAll('[required]').forEach(function (el) {
+    var clear = function () { el.closest('.f').classList.remove('err'); };
+    el.addEventListener('input', clear);
+    el.addEventListener('change', clear);
+  });
+
+  /* ════════════ Reveals ════════════ */
+  if (!window.gsap || reduced) {
+    document.querySelectorAll('.rise').forEach(function (el) { el.style.opacity = 1; });
+    paintCells(TARGET);
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.timeline({ delay: .1 })
+    .fromTo('[data-hero]', { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: .5, stagger: .08, ease: 'steps(5)' });
+
+  var groups = new Map();
+  gsap.utils.toArray('main [data-in]').forEach(function (el) {
+    var k = el.parentElement;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(el);
+  });
+  groups.forEach(function (items, parent) {
+    gsap.fromTo(items, { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: .45, ease: 'steps(5)', stagger: .06,
+        scrollTrigger: { trigger: parent, start: 'top 88%', once: true } });
+  });
+
+  /* the meter fills cell by cell, not as a sweep */
+  var gauge = document.querySelector('.gauge');
+  if (gauge) {
+    ScrollTrigger.create({
+      trigger: gauge, start: 'top 82%', once: true,
+      onEnter: function () {
+        var counter = { v: 0 };
+        gsap.to(counter, {
+          v: TARGET, duration: 1.5, ease: 'steps(25)',
+          onUpdate: function () { paintCells(counter.v); }
+        });
+      }
+    });
+  }
+
+  ScrollTrigger.refresh();
+})();
+</script>
+</body>
+</html>

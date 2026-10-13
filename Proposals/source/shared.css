@@ -1,0 +1,249 @@
+/* Shared document system for NeuroAIQ proposals — Team B58.
+   Typeface and palette follow the rebuilt NeuroAIQ website (Plus Jakarta Sans;
+   navy #003466, electric blue #38B6FF, gold #C8A84B), so the documents read as
+   part of the same project. Accent text uses #1272C4 rather than #38B6FF, which
+   is only 2.1:1 on white; the brand blue is kept for non-text marks. */
+
+@page { size: A4; margin: 0; }
+
+:root{
+  --navy:#003466;
+  --blue:#1272C4;
+  --electric:#38B6FF;
+  --gold:#C8A84B;
+  --gold-ink:#7A6522;
+  --ink:#16263A;
+  --body:#3E4D61;
+  --muted:#5B6B7F;
+  --rule:#DCE4EE;
+  --tint:#F3F7FB;
+  --blue-tint:#E7F1FB;
+  --gold-tint:#FBF4E2;
+  --red:#A63A2A;
+  --red-tint:#FBECE9;
+}
+
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{background:#fff}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  color:var(--body); font-size:8.9pt; line-height:1.62;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+b,strong{color:var(--ink); font-weight:600}
+code{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace; font-size:.86em;
+  background:var(--tint); color:var(--navy); padding:.08em .34em; border-radius:3px; white-space:nowrap}
+
+/* ── page frame ─────────────────────────────────────────── */
+.page{
+  width:210mm; height:297mm; padding:14mm 17mm 11mm;
+  display:flex; flex-direction:column; overflow:hidden;
+  page-break-after:always; break-after:page; position:relative;
+}
+.page:last-child{page-break-after:auto; break-after:auto}
+.body{flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column}
+
+.hdr{display:flex; justify-content:space-between; align-items:center; margin-bottom:9mm}
+.hdr img{height:10.5mm; width:auto; display:block}
+.hdr span{font-size:7.6pt; color:var(--muted); letter-spacing:.01em}
+.hdr--slim{margin-bottom:6mm}
+.hdr--slim img{height:8mm}
+
+.ftr{
+  display:flex; justify-content:space-between; align-items:baseline;
+  border-top:1px solid var(--rule); padding-top:3.2mm; margin-top:4mm;
+  font-size:7pt; color:var(--muted);
+}
+.ftr b{font-size:7pt; color:var(--navy); letter-spacing:.14em; font-weight:700}
+
+/* ── cover / title block ────────────────────────────────── */
+.eyebrow{font-size:7.3pt; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:3mm}
+.h1{font-size:29pt; line-height:1.08; font-weight:800; color:var(--ink); letter-spacing:-.022em}
+.h1 .a{color:var(--blue)}
+.intro{font-size:10.4pt; line-height:1.55; color:var(--body); margin-top:4.5mm; max-width:158mm}
+.accent-rule{height:2.2px; background:var(--gold); width:100%; margin:6mm 0 6mm}
+
+.meta{display:grid; grid-template-columns:repeat(4,1fr); gap:4mm; margin-top:6mm}
+.meta div{border-top:2px solid var(--navy); padding-top:2mm}
+.meta small{display:block; font-size:6.6pt; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:.6mm}
+.meta p{font-size:8.2pt; line-height:1.4; color:var(--ink); font-weight:500}
+
+/* ── section heading ────────────────────────────────────── */
+.sh{display:flex; align-items:center; gap:3mm; margin-bottom:1.6mm}
+.sh i{
+  width:6.6mm; height:6.6mm; border-radius:50%; background:var(--navy); color:#fff;
+  font-style:normal; font-size:8.6pt; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+}
+.sh h2{font-size:14.2pt; font-weight:700; color:var(--ink); letter-spacing:-.01em; line-height:1.2}
+.ss{font-size:8.8pt; color:var(--muted); margin:0 0 4mm 9.6mm; line-height:1.55; max-width:150mm}
+.ss--flush{margin-left:0}
+
+/* ── step heading: large numeral for the step-by-step plan ── */
+.step{display:flex; gap:5mm; align-items:flex-start; margin-bottom:3.5mm}
+.step .n{font-size:30pt; font-weight:800; line-height:.9; color:var(--blue); letter-spacing:-.04em; min-width:13mm}
+.step .t small{display:block; font-size:6.8pt; letter-spacing:.18em; text-transform:uppercase; font-weight:600; color:var(--gold-ink); margin-bottom:1mm}
+.step .t h2{font-size:14.5pt; font-weight:700; color:var(--ink); line-height:1.18; letter-spacing:-.01em}
+.step .t p{font-size:8.8pt; color:var(--muted); margin-top:1.4mm; line-height:1.55}
+
+/* ── label / title / body rows ──────────────────────────── */
+.rows{border-top:1px solid var(--rule)}
+.row{display:grid; grid-template-columns:52mm 1fr; gap:6mm; padding:3.4mm 0; border-bottom:1px solid var(--rule)}
+.row-l small{display:block; font-size:6.6pt; letter-spacing:.17em; text-transform:uppercase; font-weight:600; color:var(--blue); margin-bottom:.8mm}
+.row-l h3{font-size:9.6pt; font-weight:700; color:var(--ink); line-height:1.3}
+.row-r{font-size:8.8pt; line-height:1.6}
+.rows--tight .row{padding:2.6mm 0}
+
+/* ── tables ─────────────────────────────────────────────── */
+.tbl{width:100%; border-collapse:collapse; font-size:8.2pt; line-height:1.45}
+.tbl th{
+  text-align:left; font-size:6.7pt; letter-spacing:.14em; text-transform:uppercase;
+  font-weight:600; color:#fff; background:var(--navy); padding:2.2mm 2.6mm;
+}
+.tbl td{padding:2.2mm 2.6mm; border-bottom:1px solid var(--rule); vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--tint)}
+.tbl td:first-child{font-weight:600; color:var(--ink)}
+.tbl--plain td:first-child{font-weight:400; color:var(--body)}
+.tbl .c{text-align:center}
+.tbl--compact td{padding:1.55mm 2.6mm}
+.tbl--compact th{padding:1.9mm 2.6mm}
+
+/* ── status pills ───────────────────────────────────────── */
+.pill{display:inline-block; font-size:6.4pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:.9mm 2mm; border-radius:20px; white-space:nowrap; line-height:1.2}
+.pill--ok{background:var(--blue-tint); color:#0D5EA6}
+.pill--warn{background:var(--gold-tint); color:var(--gold-ink)}
+.pill--bad{background:var(--red-tint); color:var(--red)}
+.pill--navy{background:var(--navy); color:#fff}
+.pill--soft{background:#EEF1F5; color:#4A5A6E}
+
+/* ── callouts ───────────────────────────────────────────── */
+.callout{border-left:3px solid var(--gold); background:var(--gold-tint); padding:3.4mm 4.4mm; font-size:8.8pt; line-height:1.58; border-radius:0 4px 4px 0}
+.callout--blue{border-left-color:var(--blue); background:var(--blue-tint)}
+.callout--navy{border-left:none; background:var(--navy); color:#D7E3F1; border-radius:5px; padding:5mm 6mm}
+.callout--navy b{color:#fff}
+.callout small{display:block; font-size:6.6pt; letter-spacing:.17em; text-transform:uppercase; font-weight:700; color:var(--gold-ink); margin-bottom:1mm}
+.callout--blue small{color:var(--blue)}
+.callout--navy small{color:var(--gold)}
+
+/* ── checklist ──────────────────────────────────────────── */
+.check{list-style:none}
+.check li{position:relative; padding:1.9mm 0 1.9mm 7mm; border-bottom:1px dashed var(--rule); font-size:8.7pt; line-height:1.5}
+.check li:last-child{border-bottom:none}
+.check li::before{
+  content:""; position:absolute; left:0; top:2.4mm; width:3.6mm; height:3.6mm;
+  border:1.5px solid var(--blue); border-radius:1.2mm; background:#fff;
+}
+
+/* ── imagery ────────────────────────────────────────────── */
+.photo{border-radius:5px; overflow:hidden; position:relative; background:var(--navy)}
+.photo img{display:block; width:100%; height:100%; object-fit:cover}
+.photo figcaption{
+  position:absolute; left:0; right:0; bottom:0; padding:6mm 4mm 3mm;
+  background:linear-gradient(transparent, rgba(0,20,45,.88));
+  color:#E3ECF6; font-size:7.4pt; line-height:1.4;
+}
+.photo figcaption b{color:#fff; display:block; font-size:8.6pt; margin-bottom:.4mm}
+.split{display:grid; grid-template-columns:1fr 62mm; gap:7mm; align-items:start}
+.split--l{grid-template-columns:62mm 1fr}
+
+.band{
+  position:relative; border-radius:6px; overflow:hidden; height:62mm;
+  background:#0A2340; margin-bottom:0;
+}
+/* Photo on the right, text on a deep brand-navy panel on the left. A light navy
+   wash and a slight desaturation pull warm or bright stock photos into the same
+   palette, so every band reads as one set. No mix-blend-mode here: Chrome's PDF
+   output dropped the photo entirely when the wash used one. */
+.band img{position:absolute; top:0; right:0; width:66%; height:100%; object-fit:cover}  /* colour adjustment is baked into the band-*.jpg files — CSS filters bloat PDF output */
+.band::before{content:""; position:absolute; top:0; right:0; width:66%; height:100%; background:rgba(8,40,80,.28); z-index:1}
+.band::after{content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, #0A2340 0%, #0A2340 34%, rgba(10,35,64,.78) 47%, rgba(10,35,64,0) 74%)}
+.band .band-t{position:absolute; z-index:2; left:7mm; top:50%; transform:translateY(-50%); z-index:2; max-width:80mm; color:#DCE7F4}
+.band .band-t small{display:block; font-size:6.8pt; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:var(--gold); margin-bottom:1.6mm}
+.band .band-t p{font-size:12pt; line-height:1.34; font-weight:600; color:#fff}
+
+/* ── grids / cards ──────────────────────────────────────── */
+.g2{display:grid; grid-template-columns:1fr 1fr; gap:5mm}
+.g3{display:grid; grid-template-columns:repeat(3,1fr); gap:4mm}
+.g4{display:grid; grid-template-columns:repeat(4,1fr); gap:3.4mm}
+.card{border:1px solid var(--rule); border-radius:5px; padding:3.8mm 4mm; background:#fff}
+.card small{display:block; font-size:6.5pt; letter-spacing:.16em; text-transform:uppercase; font-weight:700; color:var(--blue); margin-bottom:1.2mm}
+.card h4{font-size:9.6pt; font-weight:700; color:var(--ink); line-height:1.3; margin-bottom:1.4mm}
+.card p{font-size:8.3pt; line-height:1.55}
+.card--tint{background:var(--tint); border-color:transparent}
+.card--navy{background:var(--navy); border-color:var(--navy); color:#C9D8EA}
+.card--navy h4{color:#fff}
+.card--navy small{color:var(--gold)}
+.card--navy b{color:#fff}
+
+.stat{font-size:22pt; font-weight:800; color:var(--navy); line-height:1; letter-spacing:-.03em}
+.stat + p{margin-top:1.4mm}
+
+.mt1{margin-top:2mm}.mt2{margin-top:4mm}.mt3{margin-top:6mm}.mt4{margin-top:8mm}
+.mb2{margin-bottom:4mm}.mb3{margin-bottom:6mm}
+.push{margin-top:auto}
+.small{font-size:7.6pt; color:var(--muted); line-height:1.5}
+.lead{font-size:9.6pt; line-height:1.6; color:var(--body)}
+.center{text-align:center}
+svg text{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── search-result illustration (generic — no search-engine branding) ── */
+.serp{border:1px solid var(--rule); border-radius:6px; padding:4mm 4.6mm; background:#fff}
+.serp-lbl{display:inline-block; font-size:6.4pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:.8mm 2mm; border-radius:20px; margin-bottom:2.6mm}
+.serp-site{display:flex; align-items:center; gap:2.2mm; margin-bottom:1.2mm}
+.serp-site i{width:5.4mm; height:5.4mm; border-radius:50%; background:var(--tint); display:inline-flex; align-items:center; justify-content:center}
+.serp-site i img{width:3.8mm; height:auto}
+.serp-site span{font-size:7.4pt; color:#2B3A4D; line-height:1.25}
+.serp-site span em{display:block; font-style:normal; color:#5B6B7F; font-size:6.8pt}
+.serp-title{font-size:11.6pt; color:#1A0DAB; line-height:1.3; margin-bottom:.8mm; font-weight:500}
+.serp-desc{font-size:8pt; color:#4D5156; line-height:1.5}
+.serp--bad{background:#FFFDFB; border-color:#EFD9D4}
+
+/* ── code sample ── */
+.codeblock{background:#0B2440; color:#D6E4F3; border-radius:5px; padding:3.6mm 4.4mm;
+  font-family:'JetBrains Mono',ui-monospace,Menlo,monospace; font-size:6.9pt; line-height:1.55; white-space:pre; overflow:hidden}
+.codeblock .k{color:#7FC8FF}.codeblock .s{color:#E6CF86}.codeblock .c{color:#7E93AB}
+
+/* ── dotted list ── */
+.dots{list-style:none}
+.dots li{position:relative; padding:1.3mm 0 1.3mm 4.6mm; font-size:8.6pt; line-height:1.5}
+.dots--sm li{font-size:7.9pt; padding:1mm 0 1mm 4.2mm; line-height:1.42}
+.dots--sm li::before{top:2.5mm}
+.dots li::before{content:""; position:absolute; left:0; top:2.9mm; width:1.9mm; height:1.9mm; border-radius:50%; background:var(--gold)}
+.dots--blue li::before{background:var(--blue)}
+
+.tag{display:inline-block; font-size:6.3pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  padding:1mm 2.4mm; border-radius:20px; background:var(--navy); color:#fff; margin-bottom:2.4mm}
+.tag--gold{background:var(--gold-tint); color:var(--gold-ink)}
+.tag--blue{background:var(--blue-tint); color:#0D5EA6}
+.q{font-style:normal; color:var(--ink); font-weight:500}
+
+/* ── logo sign-off: closes each document on the brand mark ── */
+.signoff{display:flex; align-items:center; justify-content:space-between; gap:9mm;
+  background:#fff; border:1px solid var(--rule); border-left:3px solid var(--gold); border-radius:0 6px 6px 0; padding:7mm 8mm}
+/* white panel: the logo file has a white background, which showed as a box on a tinted panel */
+.signoff small{display:block; font-size:6.8pt; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:var(--gold-ink); margin-bottom:1.6mm}
+.signoff p{font-size:12.4pt; line-height:1.34; font-weight:600; color:var(--ink); max-width:96mm}
+.signoff img{height:15mm; width:auto; flex:none}
+
+/* ── screenshot in a browser frame — evidence figures in the audit ── */
+.shot{border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:#fff; position:relative}
+.shot .bar{display:flex; align-items:center; gap:1.3mm; padding:1.5mm 2.4mm; background:#EEF2F6; border-bottom:1px solid var(--rule)}
+.shot .bar i{width:1.9mm; height:1.9mm; border-radius:50%; background:#C3CEDA; flex:none}
+.shot .bar span{margin-left:1.6mm; font-size:6.5pt; color:#4A5A6E; background:#fff; padding:.4mm 2.4mm; border-radius:20px; flex:1; white-space:nowrap; overflow:hidden}
+.shot .pic{position:relative}
+.shot img{display:block; width:100%; height:auto}
+.shot .pic.crop img{object-fit:cover; object-position:top}
+.shot figcaption{font-size:7.4pt; color:var(--muted); padding:2mm 2.8mm; border-top:1px solid var(--rule); line-height:1.45}
+.shot figcaption b{color:var(--ink)}
+.ring{position:absolute; border:2.5px solid #E0533D; border-radius:50%; box-shadow:0 0 0 3px rgba(224,83,61,.25)}
+.ring-tag{position:absolute; background:#E0533D; color:#fff; font-size:6.8pt; font-weight:700; padding:.6mm 2mm; border-radius:3px; white-space:nowrap}
+.legend{display:flex; flex-wrap:wrap; gap:2mm 4mm; align-items:center; font-size:7.6pt; color:var(--muted)}
+.fixbox{background:var(--navy); color:#D7E3F1; border-radius:5px; padding:4.4mm 5mm; font-size:8.6pt; line-height:1.56}
+.fixbox small{display:block; font-size:6.6pt; letter-spacing:.18em; text-transform:uppercase; font-weight:700; color:var(--gold); margin-bottom:1.4mm}
+.fixbox b{color:#fff}
+.fixbox ul{list-style:none; margin-top:1.4mm}
+.fixbox li{position:relative; padding:.8mm 0 .8mm 4.4mm}
+.fixbox li::before{content:""; position:absolute; left:0; top:2.5mm; width:1.8mm; height:1.8mm; border-radius:50%; background:var(--gold)}
+.fixbox .where{display:block; margin-top:2mm; font-size:6.8pt; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--electric)}
+.sev{display:inline-block; width:2.2mm; height:2.2mm; border-radius:50%; margin-right:1.4mm; vertical-align:.05em}

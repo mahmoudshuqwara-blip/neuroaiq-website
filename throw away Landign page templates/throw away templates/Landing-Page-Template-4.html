@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroAIQ — Inside the wiring of change</title>
+<meta name="description" content="NeuroAIQ integrates neuroscience, AI strategy and the Adaptability Quotient so enterprise AI adoption actually holds. Melbourne, Australia.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   NeuroAIQ — "White Matter"
+   A flythrough of the brain's fibre tracts. Real perspective,
+   camera pushing forward, tracts colour-coded by direction the way
+   diffusion imaging does. The descent continues as you scroll.
+   Display: Bricolage Grotesque · Body: Inter · Data: IBM Plex Mono
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --abyss:#01060F;
+  --deep:#04122E;
+  --mid:#072253;
+  --lit:#0B3B8C;
+
+  --azure:#2E9BFF;
+  --cyan:#38BDF8;
+  --ice:#9FD8FF;
+  --indigo:#6366F1;
+  --teal:#14C8D4;
+
+  --txt:#EAF3FF;
+  --txt-2:#A9C2E6;
+  --txt-3:#6E8CBC;
+  --line:rgba(126,178,255,.16);
+  --line-2:rgba(126,178,255,.32);
+
+  --container:1240px;
+  --gutter:24px;
+  --sp:clamp(80px,8.5vw,132px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{
+  margin:0; color:var(--txt-2);
+  font-family:'Inter',system-ui,sans-serif; font-size:1.0625rem; line-height:1.66;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%, #0C3576 0%, #061A42 34%, #02091C 68%, var(--abyss) 100%),
+    var(--abyss);
+  background-attachment:fixed;
+}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button,input,select,textarea{font:inherit; color:inherit}
+ul{margin:0; padding:0; list-style:none}
+p{margin:0}
+h1,h2,h3{margin:0; font-weight:400}
+:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:3px}
+
+/* ── The tissue: one fixed field the whole page travels through ── */
+#tract{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; display:block}
+/* Deepens below the hero so body copy stays readable without hiding the field */
+#depthveil{
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 40%, rgba(2,9,28,.34) 0%, rgba(1,6,15,.80) 70%, rgba(1,6,15,.94) 100%);
+}
+/* fine cellular grain — keeps the gradients from banding */
+body::after{
+  content:""; position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap{width:100%; max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter); position:relative; z-index:3}
+/* The halo scrims deliberately bleed past their box; clip horizontally so that
+   bleed can never turn into page scroll on narrow screens. `clip` rather than
+   `hidden` so it doesn't create a scroll container. */
+.sec{padding-block:var(--sp); position:relative; z-index:3; overflow-x:clip}
+
+/* ── Type ───────────────────────────────────────────────── */
+.d1,.d2,.d3{font-family:'Bricolage Grotesque','Inter',sans-serif; color:var(--txt); letter-spacing:-.045em; line-height:1}
+.d1{font-size:clamp(3.1rem,9vw,7.4rem); font-weight:800; letter-spacing:-.055em}
+.d2{font-size:clamp(1.9rem,3.6vw,3rem); font-weight:700; line-height:1.06; letter-spacing:-.045em}
+.d3{font-size:1.0625rem; font-weight:700; letter-spacing:-.03em; line-height:1.25}
+.glow-t{
+  background:linear-gradient(96deg,#FFFFFF 0%,var(--ice) 34%,var(--cyan) 66%,var(--azure) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 42px rgba(56,189,248,.45));
+}
+
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:.6875rem; font-weight:500; letter-spacing:.17em; text-transform:uppercase; color:var(--txt-3)}
+.mono--cy{color:var(--cyan)}
+.lede{font-size:clamp(1rem,1.15vw,1.125rem); line-height:1.7; color:var(--txt-2)}
+
+/* Content is held by light, not by boxes — a soft halo instead of a card */
+.halo{position:relative}
+.halo::before{
+  content:""; position:absolute; inset:-14% -10%; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse 62% 58% at 30% 50%, rgba(2,10,26,.86) 0%, rgba(2,10,26,.55) 46%, transparent 76%);
+}
+.halo--c::before{background:radial-gradient(ellipse 60% 56% at 50% 50%, rgba(2,10,26,.88) 0%, rgba(2,10,26,.56) 48%, transparent 78%)}
+
+.sec-hd{display:flex; align-items:center; gap:16px; margin-bottom:30px}
+.sec-hd .bar{width:26px; height:1px; background:linear-gradient(90deg,var(--cyan),transparent); flex-shrink:0}
+.sec-hd::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent)}
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:16px 28px; border-radius:6px; border:1px solid transparent;
+  font-size:.9375rem; font-weight:500; cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+}
+.btn .ar{width:15px; height:15px; transition:transform .35s var(--ease)}
+.btn:hover .ar{transform:translateX(4px)}
+.btn--go{
+  background:linear-gradient(120deg,var(--azure) 0%,#1D74E8 52%,var(--lit) 100%);
+  color:#fff;
+  box-shadow:0 14px 40px -14px rgba(46,155,255,.85), 0 1px 0 rgba(255,255,255,.28) inset;
+}
+.btn--go:hover{transform:translateY(-2px); box-shadow:0 22px 52px -16px rgba(46,155,255,1), 0 1px 0 rgba(255,255,255,.38) inset}
+.btn--wire{
+  background:rgba(10,32,74,.42); color:var(--txt); border-color:var(--line-2);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+.btn--wire:hover{border-color:var(--cyan); color:var(--ice); transform:translateY(-2px)}
+.btn--sm{padding:11px 20px; font-size:.875rem}
+
+/* ══════════ Header ══════════ */
+.hd{position:sticky; top:0; z-index:60; transition:background-color .4s var(--ease), border-color .4s var(--ease)}
+.hd.stuck{background:rgba(3,13,34,.7); backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%); border-bottom:1px solid var(--line)}
+.hd-in{display:flex; align-items:center; justify-content:space-between; height:76px; gap:26px}
+.mark{display:flex; align-items:center; gap:11px}
+.mark .lens{
+  display:grid; place-items:center; width:40px; height:40px; border-radius:11px; flex-shrink:0;
+  background:linear-gradient(150deg,#FFFFFF,#C9E4FA);
+  box-shadow:0 0 0 1px rgba(159,216,255,.5), 0 0 28px -4px rgba(56,189,248,.85);
+}
+.mark .lens img{width:27px}
+.mark-txt{font-family:'Bricolage Grotesque',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:-.05em; color:var(--txt)}
+.mark-txt i{font-style:normal; color:var(--cyan)}
+.nav{display:flex; gap:26px}
+.nav a{position:relative; font-size:.9125rem; color:var(--txt-2); padding-block:5px; transition:color .25s var(--ease)}
+.nav a::after{content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--cyan); transform:scaleX(0); transform-origin:left; transition:transform .34s var(--ease)}
+.nav a:hover{color:var(--ice)}
+.nav a:hover::after{transform:scaleX(1)}
+.hd-end{display:flex; align-items:center; gap:12px}
+.burger{display:none; width:42px; height:42px; border:1px solid var(--line-2); border-radius:8px; background:rgba(10,32,74,.4); cursor:pointer; align-items:center; justify-content:center}
+.burger span{display:block; width:15px; height:1px; background:var(--txt); position:relative; transition:background-color .2s}
+.burger span::before,.burger span::after{content:""; position:absolute; left:0; width:15px; height:1px; background:var(--txt); transition:transform .3s var(--ease), top .3s var(--ease)}
+.burger span::before{top:-5px}
+.burger span::after{top:5px}
+.burger.on span{background:transparent}
+.burger.on span::before{top:0; transform:rotate(45deg)}
+.burger.on span::after{top:0; transform:rotate(-45deg)}
+.sheet{display:none; position:fixed; inset:76px 0 0; z-index:59; background:rgba(2,10,28,.96); backdrop-filter:blur(22px); padding:16px var(--gutter) 40px; overflow-y:auto}
+.sheet.on{display:block}
+.sheet a{display:flex; align-items:baseline; gap:14px; padding:19px 2px; font-family:'Bricolage Grotesque',sans-serif; font-size:1.4rem; font-weight:700; letter-spacing:-.045em; color:var(--txt); border-bottom:1px solid var(--line)}
+.sheet .btn{margin-top:26px; width:100%; border-bottom:none}
+
+/* ══════════ Hero — the dive ══════════ */
+.hero{
+  position:relative; z-index:3; min-height:clamp(660px,96svh,980px);
+  display:flex; align-items:center; margin-top:-76px; padding:76px 0 104px;
+  overflow-x:clip;
+}
+.hero .wrap{width:100%}
+.hero-in{max-width:min(100%,980px)}
+/* measure set on the headline itself so it breaks "Change travels / on wiring."
+   without dragging the body copy into a narrow column with it */
+.hero .d1{max-width:14ch}
+.hero-eyebrow{display:inline-flex; align-items:center; gap:11px; margin-bottom:28px}
+.hero-eyebrow::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 14px 2px rgba(56,189,248,.95); animation:beat 2.8s ease-in-out infinite}
+@keyframes beat{0%,100%{opacity:.4; transform:scale(.82)}50%{opacity:1; transform:scale(1.2)}}
+.hero .d1{margin-bottom:28px}
+.hero-sub{max-width:34em; margin-bottom:38px}
+.hero-cta{display:flex; flex-wrap:wrap; gap:12px}
+
+/* dive telemetry, bottom rail */
+.rail{
+  position:absolute; left:0; right:0; bottom:30px; z-index:4;
+  max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter);
+  display:flex; align-items:flex-end; justify-content:space-between; gap:20px;
+}
+.rail-l{display:flex; flex-direction:column; gap:9px}
+.rail-t{display:flex; align-items:center; gap:9px; font-family:'IBM Plex Mono',monospace; font-size:.625rem; letter-spacing:.13em; text-transform:uppercase; color:var(--txt-3)}
+.rail-t b{color:var(--ice); font-weight:500; font-variant-numeric:tabular-nums}
+.rail-t .led{width:5px; height:5px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px 1px rgba(56,189,248,.95)}
+.depthbar{width:190px; height:2px; background:rgba(126,178,255,.16); border-radius:2px; overflow:hidden}
+.depthbar i{display:block; height:100%; width:2%; background:linear-gradient(90deg,var(--lit),var(--cyan),var(--ice)); box-shadow:0 0 12px 0 rgba(56,189,248,.8)}
+.rail-r{display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:.625rem; letter-spacing:.13em; text-transform:uppercase; color:var(--txt-3)}
+.rail-r i{display:block; width:22px; height:1px; background:linear-gradient(90deg,transparent,var(--cyan))}
+
+/* ══════════ Framework ══════════ */
+.quad{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border-block:1px solid var(--line); margin-top:clamp(38px,4.4vw,58px)}
+.quad li{position:relative; padding:30px 26px 28px; background:rgba(3,13,36,.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); transition:background-color .45s var(--ease)}
+.quad li:hover{background:rgba(9,32,78,.66)}
+.quad li::before{content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--azure),var(--cyan)); box-shadow:0 0 16px 0 rgba(56,189,248,.9); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease)}
+.quad li:hover::before{transform:scaleX(1)}
+.quad b{display:block; font-family:'Bricolage Grotesque',sans-serif; font-size:clamp(1.8rem,2.8vw,2.5rem); font-weight:800; letter-spacing:-.06em; color:var(--txt); line-height:.95; margin-bottom:16px}
+.quad b u{text-decoration:none; color:var(--cyan); text-shadow:0 0 28px rgba(56,189,248,.75)}
+.quad em{display:block; font-style:normal; font-family:'IBM Plex Mono',monospace; font-size:.625rem; letter-spacing:.13em; text-transform:uppercase; color:var(--txt-3); margin-bottom:11px}
+.quad p{font-size:.9375rem; line-height:1.6; color:var(--txt-2)}
+
+/* ══════════ Engagements ══════════ */
+.eng{border-top:1px solid var(--line)}
+.eng a{
+  display:grid; grid-template-columns:148px minmax(0,1fr) 132px 20px; gap:26px; align-items:center;
+  padding:26px 18px; margin-inline:-18px; border-bottom:1px solid var(--line);
+  position:relative; border-radius:8px; transition:background-color .35s var(--ease)
+}
+.eng a::after{content:""; position:absolute; left:0; top:10px; bottom:10px; width:2px; background:linear-gradient(180deg,transparent,var(--cyan),transparent); box-shadow:0 0 14px 0 rgba(56,189,248,.9); transform:scaleY(0); transition:transform .42s var(--ease)}
+.eng a:hover{background:rgba(11,40,96,.42)}
+.eng a:hover::after{transform:scaleY(1)}
+.eng .fmt{font-family:'IBM Plex Mono',monospace; font-size:.625rem; font-weight:500; letter-spacing:.13em; text-transform:uppercase; color:var(--cyan)}
+.eng .desc{font-size:.9375rem; color:var(--txt-2); line-height:1.55}
+.eng .dur{font-family:'IBM Plex Mono',monospace; font-size:.6875rem; letter-spacing:.05em; color:var(--txt-3); text-align:right}
+.eng .go{color:var(--txt-3); transition:color .35s var(--ease), transform .35s var(--ease)}
+.eng a:hover .go{color:var(--cyan); transform:translateX(4px)}
+.eng .go svg{width:15px; height:15px}
+
+/* ══════════ AQ Index ══════════ */
+.aq-grid{display:grid; grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr); gap:clamp(38px,4.5vw,70px); align-items:center}
+.claims{margin-top:26px}
+.claims li{padding:15px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:22px minmax(0,1fr); gap:14px; align-items:baseline}
+.claims i{font-style:normal; font-family:'IBM Plex Mono',monospace; font-size:.625rem; color:var(--cyan)}
+.claims p{font-size:.9375rem; line-height:1.58; color:var(--txt-2)}
+
+.gauge{border:1px solid var(--line); border-radius:12px; padding:28px 26px 24px; background:linear-gradient(165deg,rgba(11,40,96,.5),rgba(3,13,36,.62)); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px)}
+.gauge-hd{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.gauge-hd em{font-style:normal; font-family:'IBM Plex Mono',monospace; font-size:.6875rem; letter-spacing:.05em; color:var(--txt-3); text-transform:none}
+.meter{position:relative; padding-top:82px}
+.scale{position:relative; height:6px; background:rgba(126,178,255,.14); border-radius:3px; margin:0 0 12px}
+.scale-fill{position:absolute; inset:0 auto 0 0; width:0; border-radius:3px; background:linear-gradient(90deg,var(--lit),var(--azure) 55%,var(--ice)); box-shadow:0 0 24px 0 rgba(56,189,248,.75)}
+.scale-ticks i{position:absolute; top:-5px; bottom:-5px; width:1px; background:rgba(126,178,255,.26)}
+.pins{position:absolute; left:0; right:0; top:0; height:82px}
+.pin{position:absolute; bottom:14px; transform:translateX(-50%); text-align:center; white-space:nowrap; opacity:0}
+.pin b{display:block; font-family:'Bricolage Grotesque',sans-serif; font-size:1.7rem; font-weight:700; letter-spacing:-.055em; color:var(--txt); line-height:1}
+.pin span{display:block; font-family:'IBM Plex Mono',monospace; font-size:.5625rem; letter-spacing:.11em; text-transform:uppercase; color:var(--txt-3); margin-top:6px}
+.pin::after{content:""; position:absolute; left:50%; bottom:-14px; width:1px; height:12px; background:rgba(159,216,255,.45)}
+.pin--t b{color:var(--ice); text-shadow:0 0 28px rgba(56,189,248,.85)}
+.bands{display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); margin-top:14px}
+.bands li{padding:10px 8px 0 0; border-right:1px solid var(--line)}
+.bands li:last-child{border-right:none}
+.bands li:not(:first-child){padding-left:10px}
+.bands b{display:block; font-family:'IBM Plex Mono',monospace; font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--txt); font-weight:500}
+.bands span{display:block; font-size:.6875rem; line-height:1.45; color:var(--txt-3); margin-top:4px}
+.gauge-foot{margin-top:18px; padding-top:14px; border-top:1px solid var(--line); font-size:.75rem; line-height:1.55; color:var(--txt-3)}
+
+/* ══════════ Method ══════════ */
+.steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.steps li{background:rgba(3,13,36,.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); padding:26px 22px 24px; transition:background-color .4s var(--ease)}
+.steps li:hover{background:rgba(11,40,96,.62)}
+.steps .wk{display:flex; align-items:center; gap:9px; margin-bottom:14px}
+.steps .wk i{width:7px; height:7px; border-radius:50%; flex-shrink:0}
+.steps li:nth-child(1) .wk i{background:var(--lit); box-shadow:0 0 12px 0 rgba(11,59,140,1)}
+.steps li:nth-child(2) .wk i{background:var(--indigo); box-shadow:0 0 12px 0 rgba(99,102,241,.95)}
+.steps li:nth-child(3) .wk i{background:var(--azure); box-shadow:0 0 12px 0 rgba(46,155,255,.95)}
+.steps li:nth-child(4) .wk i{background:var(--ice); box-shadow:0 0 14px 0 rgba(159,216,255,.95)}
+.steps h3{margin-bottom:9px}
+.steps p{font-size:.875rem; line-height:1.58; color:var(--txt-3)}
+
+/* ══════════ Briefing ══════════ */
+.bf-grid{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(36px,4.5vw,66px); align-items:start}
+.deets{margin-top:28px; border-top:1px solid var(--line)}
+.deets > div{padding:14px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:104px minmax(0,1fr); gap:16px; align-items:baseline}
+.deets dt{font-family:'IBM Plex Mono',monospace; font-size:.5625rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--txt-3)}
+.deets dd{margin:0; font-size:.9375rem; color:var(--txt)}
+.deets a:hover{color:var(--cyan)}
+
+.form{border:1px solid var(--line); border-radius:12px; padding:clamp(26px,3vw,38px); background:linear-gradient(165deg,rgba(11,40,96,.5),rgba(3,13,36,.62)); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px)}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.f{display:flex; flex-direction:column; gap:8px; margin-bottom:18px}
+.f label{font-family:'IBM Plex Mono',monospace; font-size:.5625rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--txt-2)}
+.f label i{color:var(--cyan); font-style:normal}
+.f input,.f select,.f textarea{
+  width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line-2);
+  background:rgba(2,10,28,.5); color:var(--txt); font-size:.9375rem;
+  appearance:none; -webkit-appearance:none;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease), background-color .25s var(--ease);
+}
+.f textarea{resize:vertical; min-height:100px; line-height:1.6}
+.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A9C2E6' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 13px center; padding-right:38px; cursor:pointer}
+.f select option{background:#061735; color:var(--txt)}
+.f input::placeholder,.f textarea::placeholder{color:var(--txt-3)}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none; border-color:var(--cyan); background:rgba(11,40,96,.5); box-shadow:0 0 0 3px rgba(46,155,255,.18)}
+.f.err input,.f.err select,.f.err textarea{border-color:#FF7A9A}
+.f-msg{font-size:.6875rem; color:#FF9FB5; display:none}
+.f.err .f-msg{display:block}
+.form-foot{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:22px; padding-top:20px; border-top:1px solid var(--line)}
+.form-foot .btn{flex:1 1 190px}
+.form-foot p{flex:1 1 180px; font-size:.75rem; color:var(--txt-3); line-height:1.5}
+.said{display:none; align-items:flex-start; gap:10px; margin-top:18px; border-left:2px solid var(--cyan); background:rgba(46,155,255,.12); padding:13px 15px; border-radius:6px; font-size:.875rem; line-height:1.55; color:var(--txt)}
+.said.on{display:flex}
+.said svg{width:15px; height:15px; color:var(--cyan); flex-shrink:0; margin-top:3px}
+.said.bad{border-left-color:#FF7A9A; background:rgba(255,122,154,.12)}
+.said.bad svg{color:#FF9FB5}
+
+/* ══════════ Footer ══════════ */
+.ft{border-top:1px solid var(--line); padding-block:38px 30px; position:relative; z-index:3; background:rgba(1,6,15,.6)}
+.ft-in{display:flex; justify-content:space-between; align-items:center; gap:22px 40px; flex-wrap:wrap}
+.ft-mark{display:flex; align-items:center; gap:11px}
+.ft-mark .lens{display:grid; place-items:center; width:36px; height:36px; border-radius:9px; background:linear-gradient(150deg,#FFFFFF,#C9E4FA)}
+.ft-mark .lens img{width:24px}
+.ft-mark span{font-family:'Bricolage Grotesque',sans-serif; font-size:1rem; font-weight:700; letter-spacing:-.05em; color:var(--txt)}
+.ft-mark span i{font-style:normal; color:var(--cyan)}
+.ft nav{display:flex; gap:24px; flex-wrap:wrap}
+.ft nav a{font-size:.875rem; color:var(--txt-3); transition:color .25s var(--ease)}
+.ft nav a:hover{color:var(--cyan)}
+.ft-btm{margin-top:26px; padding-top:20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:14px 30px; flex-wrap:wrap; font-size:.75rem; color:var(--txt-3)}
+
+/* ══════════ Motion ══════════ */
+.rise{opacity:0}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+  .rise{opacity:1 !important; transform:none !important}
+  .pin{opacity:1 !important}
+}
+
+/* ══════════ Responsive ══════════ */
+@media (max-width:1040px){
+  .aq-grid,.bf-grid{grid-template-columns:1fr; gap:40px}
+  .quad{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .hero-in{max-width:none}
+}
+@media (max-width:880px){
+  .nav{display:none}
+  .burger{display:flex}
+  .hd-end .btn{display:none}
+  .eng a{grid-template-columns:128px minmax(0,1fr) 20px; gap:20px}
+  .eng .dur{display:none}
+}
+@media (max-width:680px){
+  :root{--gutter:20px}
+  .hd-in{height:66px}
+  .hero{margin-top:-66px; padding:66px 0 92px; min-height:clamp(600px,92svh,820px)}
+  .sheet{inset-block-start:66px}
+  .btn{white-space:normal; text-align:center}
+  .hero-cta .btn{flex:1 1 100%}
+  .rail{bottom:22px; flex-direction:column; align-items:flex-start; gap:12px}
+  .rail-r{display:none}
+  .depthbar{width:140px}
+  .quad{grid-template-columns:1fr}
+  .eng a{grid-template-columns:minmax(0,1fr); gap:9px; padding:20px 14px; margin-inline:-14px}
+  .eng .go{display:none}
+  .steps{grid-template-columns:1fr}
+  .meter{padding-top:0}
+  .pins{position:static; height:auto; display:flex; flex-wrap:wrap; gap:10px 30px; margin-top:18px}
+  .pin{position:static; transform:none; text-align:left}
+  .pin::after{display:none}
+  .bands{grid-template-columns:1fr 1fr; gap:12px 0}
+  .bands li:nth-child(2){border-right:none}
+  .bands li:nth-child(3){padding-left:0}
+  .bands li:nth-child(3),.bands li:nth-child(4){padding-top:12px; border-top:1px solid var(--line)}
+  .pair{grid-template-columns:1fr; gap:0}
+  .deets > div{grid-template-columns:1fr; gap:5px}
+  .ft-in{flex-direction:column; align-items:flex-start}
+}
+</style>
+<noscript><style>.rise{opacity:1 !important}.pin{opacity:1 !important}#depthveil{opacity:.6}</style></noscript>
+</head>
+<body>
+
+<canvas id="tract" aria-hidden="true"></canvas>
+<div id="depthveil" aria-hidden="true"></div>
+
+<header class="hd" id="hd">
+  <div class="wrap">
+    <div class="hd-in">
+      <a href="#top" class="mark" aria-label="NeuroAIQ home">
+        <span class="lens"><img src="logo.png" alt="NeuroAIQ"></span>
+        <span class="mark-txt">Neuro<i>AIQ</i></span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#framework">Framework</a>
+        <a href="#work">Engagements</a>
+        <a href="#aq">The AQ Index</a>
+        <a href="#method">Method</a>
+      </nav>
+      <div class="hd-end">
+        <a href="#briefing" class="btn btn--go btn--sm">Book a briefing</a>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sheet"><span></span></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet">
+  <div class="wrap" style="padding-inline:0">
+    <a href="#framework"><span class="mono">01</span> Framework</a>
+    <a href="#work"><span class="mono">02</span> Engagements</a>
+    <a href="#aq"><span class="mono">03</span> The AQ Index</a>
+    <a href="#method"><span class="mono">04</span> Method</a>
+    <a href="#briefing" class="btn btn--go">Book a briefing</a>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- ══════════ Hero — inside the white matter ══════════ -->
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <div class="hero-in halo">
+        <span class="mono mono--cy hero-eyebrow rise" data-hero>Depth 0 · Entering white matter</span>
+        <h1 class="d1 rise" data-hero>Change travels on <span class="glow-t">wiring.</span></h1>
+        <p class="lede hero-sub rise" data-hero>
+          Every organisation already has its pathways — who trusts whom, what routes around what. NeuroAIQ maps
+          them, then makes AI adoption travel them. Neuroscience, AI strategy and the Adaptability Quotient.
+          Melbourne, since 2025.
+        </p>
+        <div class="hero-cta rise" data-hero>
+          <a href="#briefing" class="btn btn--go">
+            Book a strategic briefing
+            <svg class="ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#framework" class="btn btn--wire">See the framework</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail rise" data-hero aria-hidden="true">
+      <div class="rail-l">
+        <div class="rail-t">
+          <span class="led"></span>
+          <span>Descent</span><b id="dDepth">0.00</b><span>mm</span>
+          <span style="opacity:.4">/</span>
+          <span>Neurons</span><b id="dCells">—</b>
+          <span style="opacity:.4">/</span>
+          <span>Synapses</span><b id="dSyn">—</b>
+        </div>
+        <div class="depthbar"><i id="dBar"></i></div>
+      </div>
+      <div class="rail-r"><i></i><span id="dHint">Move to steer · Scroll to descend</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════ Framework ══════════ -->
+  <section class="sec" id="framework">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><span class="bar"></span><span class="mono">Depth 1 · The framework</span></div>
+      <div class="halo" style="max-width:34em">
+        <h2 class="d2 rise" data-in>Four disciplines, one operating model. The name is the method.</h2>
+        <p class="lede rise" data-in style="margin-top:20px">
+          AI programs rarely fail on technology. They fail on absorption — capability compounds while the
+          organisation adapts in a straight line.
+        </p>
+      </div>
+
+      <ul class="quad">
+        <li class="rise" data-in>
+          <b>Neuro</b><em>The human layer</em>
+          <p>Plasticity, threat-response and psychological safety — why teams resist, and what makes new behaviour stick.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>AI</b><em>The capability layer</em>
+          <p>Use-case prioritisation through to workflow deployment, with guardrails and evidence of value.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>A<u>Q</u></b><em>The velocity layer</em>
+          <p>How fast your organisation absorbs change. We baseline it by function, then lift it.</p>
+        </li>
+        <li class="rise" data-in>
+          <b>I<u>Q</u></b><em>The systems layer</em>
+          <p>Governance, architecture and business logic, so every AI decision stays defensible.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ Engagements ══════════ -->
+  <section class="sec" id="work">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><span class="bar"></span><span class="mono">Depth 2 · Engagements</span></div>
+      <div class="halo" style="max-width:26em; margin-bottom:32px">
+        <h2 class="d2 rise" data-in>Five ways to work with us.</h2>
+      </div>
+
+      <div class="eng">
+        <a href="#briefing" class="rise" data-in>
+          <span class="fmt">Embedded</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:5px">AI change enablement &amp; mindset coaching</b>Closing the gap between the announcement and the habit.</span>
+          <span class="dur">8–16 weeks</span>
+          <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="fmt">Advisory</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:5px">Executive leadership &amp; cognitive readiness</b>Confidence at the top sets the ceiling for adoption below.</span>
+          <span class="dur">6–12 weeks</span>
+          <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="fmt">Strategy</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:5px">Strategic AI planning &amp; governance</b>A defensible route from ambition to architecture.</span>
+          <span class="dur">10–14 weeks</span>
+          <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="fmt">Delivery</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:5px">Program &amp; project management</b>Senior delivery leadership for multi-stream transformation.</span>
+          <span class="dur">3–9 months</span>
+          <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#briefing" class="rise" data-in>
+          <span class="fmt">Workshop</span>
+          <span class="desc"><b class="d3" style="display:block;margin-bottom:5px">Custom corporate training &amp; workshops</b>Built on your workflows and your data, not generic tool demos.</span>
+          <span class="dur">1–3 days</span>
+          <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ AQ Index ══════════ -->
+  <section class="sec" id="aq">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><span class="bar"></span><span class="mono">Depth 3 · The science of AQ</span></div>
+      <div class="aq-grid">
+        <div class="halo">
+          <h2 class="d2 rise" data-in>Adaptability is no longer a trait. It's a reading.</h2>
+          <ul class="claims">
+            <li class="rise" data-in><i>01</i><p>Ambiguity is processed as threat — until that is addressed, training underdelivers.</p></li>
+            <li class="rise" data-in><i>02</i><p>Pathways strengthen through spaced, contextual practice, not one-off workshops.</p></li>
+            <li class="rise" data-in><i>03</i><p>What gets measured gets sustained. We score AQ by function and track it.</p></li>
+          </ul>
+        </div>
+
+        <div class="gauge rise" data-in>
+          <div class="gauge-hd">
+            <span class="mono mono--cy">NeuroAIQ AQ Index</span>
+            <em>0–100 · function level</em>
+          </div>
+          <div class="meter">
+            <div class="scale">
+              <span class="scale-fill" id="scaleFill"></span>
+              <span class="scale-ticks"><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i></span>
+            </div>
+            <span class="pins">
+              <span class="pin" id="pinNow" style="left:41%"><b>41</b><span>Typical baseline</span></span>
+              <span class="pin pin--t" id="pinTarget" style="left:68%"><b>68</b><span>Post-engagement</span></span>
+            </span>
+          </div>
+          <ul class="bands">
+            <li><b>0–25 Fragile</b><span>Change lands on individuals, then is lost</span></li>
+            <li><b>26–50 Reactive</b><span>Adapts under pressure, at cost to delivery</span></li>
+            <li><b>51–75 Responsive</b><span>Absorbs change without stalling core work</span></li>
+            <li><b>76–100 Adaptive</b><span>Continuous change as operating condition</span></li>
+          </ul>
+          <p class="gauge-foot">Illustrative. Every engagement sets its own baseline during Assess &amp; Decode — adaptability is almost never evenly distributed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ Method ══════════ -->
+  <section class="sec" id="method">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><span class="bar"></span><span class="mono">Depth 4 · Method</span></div>
+      <div class="halo" style="max-width:30em; margin-bottom:32px">
+        <h2 class="d2 rise" data-in>Four stages. They overlap, because transformation does.</h2>
+      </div>
+
+      <ul class="steps">
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="mono">Weeks 1–4</span></div>
+          <h3 class="d3">Assess &amp; decode</h3>
+          <p>Cognitive and AI readiness diagnostic. Capability, data maturity, resistance patterns, AQ baseline.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="mono">Weeks 3–8</span></div>
+          <h3 class="d3">Rewire &amp; align</h3>
+          <p>Leadership alignment and neuroscience-based communication. One narrative, less perceived threat.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="mono">Weeks 6–16</span></div>
+          <h3 class="d3">Integrate &amp; upskill</h3>
+          <p>Workflow integration with role-specific training. Capability built inside live work.</p>
+        </li>
+        <li class="rise" data-in>
+          <div class="wk"><i></i><span class="mono">Week 14 on</span></div>
+          <h3 class="d3">Sustain &amp; evolve</h3>
+          <p>Reinforcement and tracking. Adoption moves into business reporting, then we hand over.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ Briefing ══════════ -->
+  <section class="sec" id="briefing">
+    <div class="wrap">
+      <div class="sec-hd rise" data-in><span class="bar"></span><span class="mono">Depth 5 · Executive briefing</span></div>
+      <div class="bf-grid">
+
+        <div class="halo">
+          <h2 class="d2 rise" data-in>Let's pressure-test your transformation.</h2>
+          <p class="lede rise" data-in style="margin-top:18px">
+            A confidential 45 minutes. We review your AI ambition, name the cognitive and governance risks most
+            likely to derail it, and outline what an engagement would look like.
+          </p>
+          <dl class="deets rise" data-in>
+            <div><dt>Location</dt><dd>Melbourne, Victoria, Australia</dd></div>
+            <div><dt>Enquiries</dt><dd><a href="mailto:hello@neuroaiq.com.au">hello@neuroaiq.com.au</a></dd></div>
+            <div><dt>Hours</dt><dd>Mon–Fri, 9:00am–6:00pm AEST</dd></div>
+            <div><dt>Delivery</dt><dd>On site across Australia, virtual worldwide</dd></div>
+          </dl>
+        </div>
+
+        <div class="form rise" data-in>
+          <form id="frm" novalidate>
+            <div class="pair">
+              <div class="f">
+                <label for="name">Full name <i>*</i></label>
+                <input type="text" id="name" placeholder="Jane Whitfield" autocomplete="name" required>
+                <span class="f-msg">Enter your full name</span>
+              </div>
+              <div class="f">
+                <label for="company">Company <i>*</i></label>
+                <input type="text" id="company" placeholder="Organisation" autocomplete="organization" required>
+                <span class="f-msg">Enter your organisation</span>
+              </div>
+            </div>
+            <div class="f">
+              <label for="email">Work email <i>*</i></label>
+              <input type="email" id="email" placeholder="jane@company.com.au" autocomplete="email" required>
+              <span class="f-msg">Enter a valid work email</span>
+            </div>
+            <div class="f">
+              <label for="focus">Transformation focus <i>*</i></label>
+              <select id="focus" required>
+                <option value="" selected disabled>Select your priority</option>
+                <option>AI change enablement &amp; coaching</option>
+                <option>Executive leadership &amp; readiness</option>
+                <option>Strategic AI planning &amp; governance</option>
+                <option>Program &amp; project management</option>
+                <option>Corporate training &amp; workshops</option>
+                <option>Organisation-wide AQ assessment</option>
+                <option>Not yet defined — seeking guidance</option>
+              </select>
+              <span class="f-msg">Choose a focus area</span>
+            </div>
+            <div class="f">
+              <label for="message">Message</label>
+              <textarea id="message" placeholder="Your initiative, the timeline, and the outcome you need."></textarea>
+            </div>
+            <div class="form-foot">
+              <button type="submit" class="btn btn--go">
+                Request briefing
+                <svg class="ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+              <p>We reply within one business day. Commercial-in-confidence.</p>
+            </div>
+            <div class="said" id="said" role="status" aria-live="polite">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <span id="saidTxt"></span>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-in">
+      <a href="#top" class="ft-mark" aria-label="NeuroAIQ home">
+        <span class="lens"><img src="logo.png" alt="NeuroAIQ"></span>
+        <span>Neuro<i>AIQ</i></span>
+      </a>
+      <nav aria-label="Footer">
+        <a href="#framework">Framework</a>
+        <a href="#work">Engagements</a>
+        <a href="#aq">AQ Index</a>
+        <a href="#method">Method</a>
+        <a href="mailto:hello@neuroaiq.com.au">hello@neuroaiq.com.au</a>
+      </nav>
+    </div>
+    <div class="ft-btm">
+      <p>© 2026 NeuroAIQ. Founded 2025 in Melbourne, Victoria.</p>
+      <p>Neuroscience · Artificial intelligence · Adaptability · Intelligence</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ════════════════════════════════════════════════════════════
+     NEURAL TISSUE — neurons, dendritic arbors and synapses in depth.
+
+     The key geometric rule: processes run mostly ACROSS the view, not along
+     the camera axis. Curves aligned with the axis get stretched into radial
+     streaks by perspective and read as a warp tunnel; run them laterally and
+     you see their arcs side-on, the way tractography actually looks.
+
+     Three layers, back to front:
+       · white matter — long, softly curving bundles, dim, sets the volume
+       · neurons      — somas with dendritic arbors grown by a bending walk
+       · synapses     — bright contacts where arbors of two cells meet,
+                        with signals travelling the branches between them
+     ════════════════════════════════════════════════════════════ */
+  var cv = $('tract'), ctx = cv && cv.getContext('2d');
+  var W = 0, H = 0, dpr = 1, raf = null, running = false;
+  var tracts = [], cells = [], synapses = [], signals = [], motes = [];
+  var camZ = 0, camTargetBoost = 0, dive = 0, tick = 0;
+  var look = { x: 0, y: 0, tx: 0, ty: 0 };
+
+  var FOCAL = 700, FAR = 3600, NEAR = 120;
+  var HUES = [
+    [56, 189, 248], [46, 155, 255], [125, 211, 252],
+    [99, 102, 241], [20, 200, 212], [29, 116, 232]
+  ];
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  var somaSprite = null;
+  function buildSprite() {
+    var r = 48, s = document.createElement('canvas');
+    s.width = s.height = r * 2;
+    var g = s.getContext('2d');
+    var grd = g.createRadialGradient(r, r, 0, r, r, r);
+    grd.addColorStop(0, 'rgba(226,244,255,.95)');
+    grd.addColorStop(.16, 'rgba(120,200,255,.5)');
+    grd.addColorStop(.45, 'rgba(46,155,255,.14)');
+    grd.addColorStop(1, 'rgba(46,155,255,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, r * 2, r * 2);
+    somaSprite = s;
+  }
+
+  /* A process grown by walking with a smoothly bending heading. Direction is
+     biased away from the camera axis so the curve stays broadside to the view. */
+  function grow(x, y, z, dx, dy, dz, steps, len, bend) {
+    var pts = [x, y, z];
+    var w1 = rnd(0, 6.28), w2 = rnd(0, 6.28), w3 = rnd(0, 6.28);
+    for (var i = 1; i <= steps; i++) {
+      var t = i * .55;
+      dx += Math.sin(t + w1) * bend;
+      dy += Math.cos(t * 1.27 + w2) * bend;
+      dz += Math.sin(t * .8 + w3) * bend * .22;   /* little depth wander */
+      var m = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+      dx /= m; dy /= m; dz /= m;
+      x += dx * len; y += dy * len; z += dz * len;
+      pts.push(x, y, z);
+      len *= .93;                                  /* processes taper as they branch out */
+    }
+    return pts;
+  }
+
+  function seed() {
+    tracts = []; cells = []; synapses = []; signals = []; motes = [];
+    if (!somaSprite) buildSprite();
+
+    var wide = W > 900;
+    var sx = Math.max(W, 900) * .78, sy = Math.max(H, 700) * .78;
+
+    /* ── white matter: long lateral bundles ── */
+    var nBundles = wide ? 9 : 6;
+    for (var b = 0; b < nBundles; b++) {
+      var bz = camZ + rnd(500, FAR);
+      var bx = rnd(-sx, sx), by = rnd(-sy, sy);
+      var ang = rnd(0, 6.28);
+      var ddx = Math.cos(ang), ddy = Math.sin(ang);
+      var c = HUES[(Math.random() * HUES.length) | 0];
+      var per = wide ? 5 : 3;
+      for (var f = 0; f < per; f++) {
+        tracts.push({
+          pts: grow(bx + rnd(-40, 40), by + rnd(-40, 40), bz + rnd(-120, 120),
+            ddx + rnd(-.1, .1), ddy + rnd(-.1, .1), rnd(-.14, .14),
+            13, rnd(150, 230), .11),
+          c: c, w: rnd(.6, 1.3)
+        });
+      }
+    }
+
+    /* ── neurons, in loose clusters ──
+       Scattered uniformly, arbors almost never reach each other and you get a
+       thin field with no synapses. Real tissue clumps, so cluster the somas:
+       dense connected neighbourhoods with open space between them. */
+    /* A phone canvas is ~4× less fill than desktop, so it can carry nearly the
+       same cell count — at the lower figure the tissue read thin. */
+    var nClusters = wide ? 8 : 7, perCluster = 4;
+    for (var g0 = 0; g0 < nClusters; g0++) {
+      var gx = rnd(-sx, sx), gy = rnd(-sy, sy), gz = camZ + rnd(400, FAR);
+      var gc = HUES[(Math.random() * HUES.length) | 0];
+      for (var n = 0; n < perCluster; n++) {
+        var cx0 = gx + rnd(-240, 240), cy0 = gy + rnd(-240, 240), cz0 = gz + rnd(-220, 220);
+        var cc = Math.random() < .7 ? gc : HUES[(Math.random() * HUES.length) | 0];
+        var arbor = [], nb = 3 + ((Math.random() * 3) | 0);
+        var base = rnd(0, 6.28);
+        for (var d = 0; d < nb; d++) {
+          var a = base + d * (6.28 / nb) + rnd(-.55, .55);
+          arbor.push({
+            pts: grow(cx0, cy0, cz0, Math.cos(a), Math.sin(a), rnd(-.22, .22),
+              8 + ((Math.random() * 4) | 0), rnd(76, 132), .3),
+            w: rnd(.55, 1.2)
+          });
+        }
+        cells.push({ x: cx0, y: cy0, z: cz0, r: rnd(2.4, 4.6), c: cc, arbor: arbor, ph: rnd(0, 6.28) });
+      }
+    }
+
+    /* ── synapses: where one cell's arbor tip lands near another cell's ── */
+    for (var i = 0; i < cells.length; i++) {
+      for (var j = i + 1; j < cells.length; j++) {
+        var A = cells[i], B = cells[j];
+        for (var ai = 0; ai < A.arbor.length; ai++) {
+          var ap = A.arbor[ai].pts, an = ap.length;
+          var axp = ap[an - 3], ayp = ap[an - 2], azp = ap[an - 1];
+          for (var bi = 0; bi < B.arbor.length; bi++) {
+            var bp = B.arbor[bi].pts, bn = bp.length;
+            var bxp = bp[bn - 3], byp = bp[bn - 2], bzp = bp[bn - 1];
+            var dd = Math.hypot(axp - bxp, ayp - byp, azp - bzp);
+            if (dd < 210) {
+              synapses.push({
+                x: (axp + bxp) / 2, y: (ayp + byp) / 2, z: (azp + bzp) / 2,
+                ph: rnd(0, 6.28), from: { c: i, b: ai }, to: { c: j, b: bi }
+              });
+            }
+          }
+        }
+      }
+    }
+    if (synapses.length > 44) synapses.length = 44;
+
+    for (var m = 0; m < (wide ? 110 : 60); m++) {
+      motes.push({ x: rnd(-sx * 1.6, sx * 1.6), y: rnd(-sy * 1.6, sy * 1.6), z: camZ + rnd(NEAR, FAR), s: rnd(.5, 1.7) });
+    }
+
+    var dn = $('dCells'); if (dn) dn.textContent = cells.length;
+    var ds = $('dSyn'); if (ds) ds.textContent = synapses.length;
+  }
+
+  function size() {
+    if (!cv) return;
+    /* A full-viewport additive field is fill-rate bound, not geometry bound.
+       Capping the buffer below native costs almost nothing on a soft glowing
+       image and is the difference between 9fps and 60. */
+    dpr = Math.min(window.devicePixelRatio || 1, 1);
+    W = Math.max(1, window.innerWidth); H = Math.max(1, window.innerHeight);
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seed();
+  }
+
+  /* shift a whole structure to the far plane once it passes behind the camera */
+  function recycle(obj, ptsList) {
+    var span = FAR - 300;
+    obj.z += span;
+    for (var k = 0; k < ptsList.length; k++) {
+      var p = ptsList[k];
+      for (var q = 2; q < p.length; q += 3) p[q] += span;
+    }
+  }
+
+  function step() {
+    tick++;
+    camTargetBoost *= .92;
+    camZ += .45 + camTargetBoost;          /* a drift, not a rush */
+    if (dive < 1) dive = Math.min(1, dive + .011);
+
+    look.x += (look.tx - look.x) * .045;
+    look.y += (look.ty - look.y) * .045;
+
+    var i, k;
+    for (i = 0; i < cells.length; i++) {
+      var c = cells[i];
+      if (c.z < camZ + NEAR) {
+        var lists = [];
+        for (k = 0; k < c.arbor.length; k++) lists.push(c.arbor[k].pts);
+        recycle(c, lists);
+        for (k = 0; k < synapses.length; k++) {
+          if (synapses[k].from.c === i || synapses[k].to.c === i) synapses[k].z += FAR - 300;
+        }
+      }
+    }
+    for (i = 0; i < tracts.length; i++) {
+      var tr = tracts[i];
+      if (tr.pts[2] < camZ + NEAR && tr.pts[tr.pts.length - 1] < camZ + NEAR) {
+        for (var q = 2; q < tr.pts.length; q += 3) tr.pts[q] += FAR - 300;
+      }
+    }
+    for (i = 0; i < motes.length; i++) {
+      if (motes[i].z < camZ + NEAR) motes[i].z = camZ + FAR;
+    }
+
+    /* signals: a pulse runs a branch, so the tissue reads as active */
+    if (cells.length && tick % 22 === 0 && signals.length < 16) {
+      var ci = (Math.random() * cells.length) | 0;
+      var cell = cells[ci];
+      var bi = (Math.random() * cell.arbor.length) | 0;
+      signals.push({ c: ci, b: bi, t: 0, sp: rnd(.012, .026) });
+    }
+    for (i = signals.length - 1; i >= 0; i--) {
+      signals[i].t += signals[i].sp;
+      if (signals[i].t >= 1) signals.splice(i, 1);
+    }
+
+    var dd2 = $('dDepth'); if (dd2) dd2.textContent = (camZ / 1000).toFixed(2);
+    var bar = $('dBar'); if (bar) bar.style.width = (2 + (camZ % 9000) / 9000 * 98).toFixed(1) + '%';
+  }
+
+  /* project a 3D point; returns null when behind the near plane */
+  function proj(x, y, z, cx, cy, zoom, out) {
+    var dz = z - camZ;
+    if (dz < NEAR) return false;
+    var s = FOCAL / dz * zoom;
+    out[0] = cx + x * s; out[1] = cy + y * s; out[2] = dz; out[3] = s;
+    return true;
+  }
+
+  /* Every process was its own additive stroke — ~200 draw calls a frame, which
+     is what capped the rate. Quantise colour, alpha and width into buckets and
+     batch each bucket into a single path, so the whole field draws in a few dozen. */
+  var batch = Object.create(null), scratch = [];
+
+  function queuePts(pts, cx, cy, zoom, rgb, alphaMul, widthMul) {
+    var minZ = 1e9, bx0 = 1e9, bx1 = -1e9, by0 = 1e9, by1 = -1e9;
+    var o = [0, 0, 0, 0], maxS = 0, run = null;
+    scratch.length = 0;
+
+    for (var i = 0; i < pts.length; i += 3) {
+      if (!proj(pts[i], pts[i + 1], pts[i + 2], cx, cy, zoom, o)) { run = null; continue; }
+      if (!run) { run = []; scratch.push(run); }
+      run.push(o[0], o[1]);
+      if (o[2] < minZ) minZ = o[2];
+      if (o[3] > maxS) maxS = o[3];
+      if (o[0] < bx0) bx0 = o[0]; if (o[0] > bx1) bx1 = o[0];
+      if (o[1] < by0) by0 = o[1]; if (o[1] > by1) by1 = o[1];
+    }
+    if (minZ > 1e8 || !scratch.length) return 0;
+    if (bx1 < -70 || bx0 > W + 70 || by1 < -70 || by0 > H + 70) return 0;
+
+    var depth = 1 - Math.min(1, minZ / FAR);
+    var fade = Math.min(1, Math.max(0, (minZ - NEAR) / 500));
+    var a = depth * fade * alphaMul;
+    if (a < .02) return 0;
+
+    var ab = Math.max(1, Math.round(a * 12));
+    var wb = Math.max(1, Math.round(Math.min(3.4, maxS * widthMul) * 2));
+    var key = rgb[0] + '_' + rgb[1] + '_' + rgb[2] + '_' + ab + '_' + wb;
+    var e = batch[key];
+    if (!e) e = batch[key] = { rgb: rgb, a: ab / 12, w: wb / 2, runs: [] };
+    for (var k = 0; k < scratch.length; k++) if (scratch[k].length >= 4) e.runs.push(scratch[k]);
+    return depth;
+  }
+
+  function flushStrokes() {
+    for (var key in batch) {
+      var e = batch[key];
+      if (!e.runs.length) continue;
+      ctx.strokeStyle = 'rgba(' + e.rgb[0] + ',' + e.rgb[1] + ',' + e.rgb[2] + ',' + e.a.toFixed(3) + ')';
+      ctx.lineWidth = e.w;
+      ctx.beginPath();
+      for (var i = 0; i < e.runs.length; i++) {
+        var r = e.runs[i];
+        ctx.moveTo(r[0], r[1]);
+        for (var j = 2; j < r.length; j += 2) ctx.lineTo(r[j], r[j + 1]);
+      }
+      ctx.stroke();
+    }
+    batch = Object.create(null);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var cx = W / 2 + look.x, cy = H / 2 + look.y;
+    var ease = dive * dive * (3 - 2 * dive);
+    var zoom = .62 + .38 * ease;
+    var am = .35 + .65 * ease;
+    var o = [0, 0, 0, 0];
+
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    /* ── suspended particulate, sells the volume ── */
+    ctx.fillStyle = 'rgba(150,205,255,.42)';
+    ctx.beginPath();
+    for (var m = 0; m < motes.length; m++) {
+      var mo = motes[m];
+      if (!proj(mo.x, mo.y, mo.z, cx, cy, zoom, o)) continue;
+      if (o[0] < -30 || o[0] > W + 30 || o[1] < -30 || o[1] > H + 30) continue;
+      var mr = mo.s * o[3] * 2.2;
+      if (mr < .3) continue;
+      ctx.moveTo(o[0] + mr, o[1]);
+      ctx.arc(o[0], o[1], mr, 0, 6.2832);
+    }
+    ctx.fill();
+
+    /* ── white matter, furthest back and softest ── */
+    for (var t = 0; t < tracts.length; t++) {
+      queuePts(tracts[t].pts, cx, cy, zoom, tracts[t].c, .42 * am, tracts[t].w * .9);
+    }
+
+    /* ── dendritic arbors ── */
+    var nearCells = [];
+    for (var i = 0; i < cells.length; i++) {
+      var c = cells[i], dsum = 0;
+      for (var b = 0; b < c.arbor.length; b++) {
+        dsum = Math.max(dsum, queuePts(c.arbor[b].pts, cx, cy, zoom, c.c, .75 * am, c.arbor[b].w));
+      }
+      if (dsum > 0) nearCells.push({ c: c, d: dsum });
+    }
+
+    flushStrokes();
+
+    /* ── somas ── */
+    for (var s = 0; s < nearCells.length; s++) {
+      var cell = nearCells[s].c;
+      if (!proj(cell.x, cell.y, cell.z, cx, cy, zoom, o)) continue;
+      var pulse = .82 + .18 * Math.sin(tick * .045 + cell.ph);
+      var gsz = Math.min(120, cell.r * o[3] * 20) * pulse;
+      var aa = nearCells[s].d * am;
+      ctx.globalAlpha = Math.min(.9, aa * .95);
+      ctx.drawImage(somaSprite, o[0] - gsz / 2, o[1] - gsz / 2, gsz, gsz);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(236,248,255,' + Math.min(.95, aa).toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(o[0], o[1], Math.min(5.5, cell.r * o[3] * 1.5), 0, 6.2832);
+      ctx.fill();
+    }
+
+    /* ── synaptic contacts ── */
+    for (var y = 0; y < synapses.length; y++) {
+      var sy2 = synapses[y];
+      if (!proj(sy2.x, sy2.y, sy2.z, cx, cy, zoom, o)) continue;
+      if (o[0] < -20 || o[0] > W + 20 || o[1] < -20 || o[1] > H + 20) continue;
+      var dep = 1 - Math.min(1, o[2] / FAR);
+      var fl = .55 + .45 * Math.sin(tick * .07 + sy2.ph);
+      var sa = dep * fl * am;
+      if (sa < .04) continue;
+      var sr = Math.max(.7, Math.min(3.4, o[3] * 2.2));
+      ctx.globalAlpha = Math.min(.75, sa * .8);
+      ctx.drawImage(somaSprite, o[0] - sr * 4.5, o[1] - sr * 4.5, sr * 9, sr * 9);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(214,242,255,' + Math.min(.95, sa).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(o[0], o[1], sr, 0, 6.2832); ctx.fill();
+    }
+
+    /* ── signals travelling the arbors ── */
+    for (var g = 0; g < signals.length; g++) {
+      var sg = signals[g], cl = cells[sg.c];
+      if (!cl) continue;
+      var br = cl.arbor[sg.b];
+      if (!br) continue;
+      var np = br.pts.length / 3;
+      var fi = sg.t * (np - 1), i0 = Math.floor(fi), fr = fi - i0;
+      if (i0 >= np - 1) continue;
+      var ax2 = br.pts[i0 * 3], ay2 = br.pts[i0 * 3 + 1], az2 = br.pts[i0 * 3 + 2];
+      var bx2 = br.pts[(i0 + 1) * 3], by2 = br.pts[(i0 + 1) * 3 + 1], bz2 = br.pts[(i0 + 1) * 3 + 2];
+      if (!proj(ax2 + (bx2 - ax2) * fr, ay2 + (by2 - ay2) * fr, az2 + (bz2 - az2) * fr, cx, cy, zoom, o)) continue;
+      var sd = 1 - Math.min(1, o[2] / FAR);
+      var srz = Math.max(.9, Math.min(4.5, o[3] * 2.8));
+      ctx.globalAlpha = Math.min(.85, sd * am);
+      ctx.drawImage(somaSprite, o[0] - srz * 9, o[1] - srz * 9, srz * 18, srz * 18);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(245,252,255,' + Math.min(.98, sd * am).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(o[0], o[1], srz, 0, 6.2832); ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  function loop() { step(); draw(); raf = requestAnimationFrame(loop); }
+  function start() { if (!running && cv) { running = true; loop(); } }
+  function stop() { if (running) { running = false; cancelAnimationFrame(raf); } }
+
+  if (cv && ctx) {
+    size();
+    if (reduced) {
+      dive = 1; draw();                 /* one still frame through the tissue */
+    } else {
+      start();
+
+      /* steer: the field leans toward the pointer */
+      window.addEventListener('mousemove', function (e) {
+        look.tx = ((e.clientX / W) - .5) * -110;
+        look.ty = ((e.clientY / H) - .5) * -80;
+      }, { passive: true });
+
+      var lastY = window.scrollY;
+      window.addEventListener('scroll', function () {
+        var d = window.scrollY - lastY;
+        lastY = window.scrollY;
+        /* scrolling drives the descent, clamped so a flick can't warp you */
+        camTargetBoost = Math.max(-6, Math.min(26, camTargetBoost + d * .32));
+      }, { passive: true });
+
+      var tabOn = true, pageOn = true;
+      var sync = function () { (tabOn && pageOn) ? start() : stop(); };
+      document.addEventListener('visibilitychange', function () {
+        tabOn = !document.hidden; sync();
+      });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (en) {
+          pageOn = en[en.length - 1].isIntersecting; sync();
+        }, { threshold: 0 }).observe(document.body);
+      }
+
+      if (window.matchMedia('(hover: none)').matches) {
+        var dh = $('dHint'); if (dh) dh.textContent = 'Scroll to descend';
+      }
+    }
+
+    var rt;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { size(); if (reduced) draw(); }, 220);
+    });
+  }
+
+  /* ════════════ Header ════════════ */
+  var hd = $('hd');
+  var veil = $('depthveil');
+  var heroEl = $('hero');
+  var onScroll = function () {
+    hd.classList.toggle('stuck', window.scrollY > 12);
+    /* the tissue darkens as you leave the hero so body copy stays legible */
+    if (veil && heroEl) {
+      var p = Math.min(1, window.scrollY / Math.max(1, heroEl.offsetHeight * .72));
+      veil.style.opacity = (p * .82).toFixed(3);
+    }
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ════════════ Mobile sheet ════════════ */
+  var burger = $('burger'), sheet = $('sheet');
+  var shut = function () {
+    sheet.classList.remove('on'); burger.classList.remove('on');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+    document.body.style.overflow = '';
+  };
+  burger.addEventListener('click', function () {
+    var open = sheet.classList.toggle('on');
+    burger.classList.toggle('on', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', shut); });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') shut(); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 880) shut(); });
+
+  /* ════════════ Briefing form ════════════ */
+  var frm = $('frm'), said = $('said'), saidTxt = $('saidTxt');
+  var isEmail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
+
+  frm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    frm.querySelectorAll('[required]').forEach(function (el) {
+      var v = el.value.trim();
+      var ok = v !== '' && (el.type !== 'email' || isEmail(v));
+      el.closest('.f').classList.toggle('err', !ok);
+      if (!ok && !firstBad) firstBad = el;
+    });
+    if (firstBad) {
+      said.classList.add('on', 'bad');
+      saidTxt.textContent = 'Check the highlighted fields, then send again.';
+      firstBad.focus();
+      return;
+    }
+    var first = $('name').value.trim().split(/\s+/)[0];
+    said.classList.add('on'); said.classList.remove('bad');
+    saidTxt.textContent = 'Thank you, ' + first + '. Your request is with us — a senior transformation lead will reply within one business day.';
+    frm.reset();
+  });
+  frm.querySelectorAll('[required]').forEach(function (el) {
+    var clear = function () { el.closest('.f').classList.remove('err'); };
+    el.addEventListener('input', clear);
+    el.addEventListener('change', clear);
+  });
+
+  /* ════════════ Reveals ════════════ */
+  if (!window.gsap || reduced) {
+    document.querySelectorAll('.rise').forEach(function (el) { el.style.opacity = 1; });
+    document.querySelectorAll('.pin').forEach(function (el) { el.style.opacity = 1; });
+    var sf0 = $('scaleFill'); if (sf0) sf0.style.width = '68%';
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* surfacing: the words resolve as the dive settles */
+  gsap.timeline({ delay: .2 })
+    .fromTo('[data-hero]', { opacity: 0, y: 30, filter: 'blur(9px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.05, stagger: .11, ease: 'power3.out' });
+
+  var groups = new Map();
+  gsap.utils.toArray('main [data-in]').forEach(function (el) {
+    var k = el.parentElement;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(el);
+  });
+  groups.forEach(function (items, parent) {
+    gsap.fromTo(items, { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: .65, ease: 'power2.out', stagger: .07,
+        scrollTrigger: { trigger: parent, start: 'top 88%', once: true } });
+  });
+
+  var gauge = document.querySelector('.gauge');
+  if (gauge) {
+    ScrollTrigger.create({
+      trigger: gauge, start: 'top 80%', once: true,
+      onEnter: function () {
+        gsap.to('#scaleFill', { width: '68%', duration: 1.15, ease: 'power2.out' });
+        gsap.to('#pinNow', { opacity: 1, duration: .4, delay: .4 });
+        gsap.to('#pinTarget', { opacity: 1, duration: .4, delay: .85 });
+      }
+    });
+  }
+
+  ScrollTrigger.refresh();
+})();
+</script>
+</body>
+</html>
